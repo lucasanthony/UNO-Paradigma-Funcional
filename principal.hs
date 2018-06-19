@@ -15,7 +15,6 @@ type Numero = Int
 type Cor = String
 type Efeito = String
 type Carta = (Numero, Cor, Efeito)
-type Tabela = [Char]
 data Jogador = Jogador Nome Pontuacao Mao
 					deriving (Show, Read)
 
@@ -58,7 +57,7 @@ inicio = do
 menu :: Jogadores -> IO Jogadores
 menu dados = do
     system "cls" -- limpa a tela (windows somente)
-    putStrLn "-------------------------------- Jogo da Velha --------------------------------"
+    putStrLn "-------------------------------- Jogo UNO --------------------------------"
     putStrLn "\nDigite 1 para cadastrar jogador"
     putStrLn "Digite 2 para jogar"
     putStrLn "Digite 3 para visualizar o ranking"
