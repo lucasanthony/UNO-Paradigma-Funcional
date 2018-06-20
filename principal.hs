@@ -135,7 +135,7 @@ novoJogo :: Jogadores -> Nome -> Deck -> Nome -> Deck -> Nome -> Deck -> Nome ->
 novoJogo dados jogador1 deck1 jogador2 deck2 jogador3 deck3 jogador4 deck4 = do
           putStrLn ("\nIniciando o jogo \"" ++
               jogador1 ++ " vs " ++ jogador2 ++ " vs " ++ jogador3 ++ " vs " ++ jogador4 ++ "\" ... ")
-          putStrLn ("lets do this!!")
+          putStrLn ("lets do this!!\n")
 
           rodarJogo dados (0,"first card","none") jogador1 deck1 jogador2 deck2 jogador3 deck3 jogador4 deck4 1 False
 
@@ -143,7 +143,7 @@ novoJogo dados jogador1 deck1 jogador2 deck2 jogador3 deck3 jogador4 deck4 = do
 
 rodarJogo :: Jogadores -> Carta ->  Nome -> Deck -> Nome -> Deck -> Nome -> Deck -> Nome -> Deck-> Vez -> Bool -> IO Jogadores
 rodarJogo dados topo jogador1 deck1 jogador2 deck2 jogador3 deck3 jogador4 deck4 vez reversed = do
-          putStrLn ("Topo : " ++ show topo ++ "\n")
+          showTopo topo
           if (vez == 1)
             then do showCards deck1 0
                     op <- getLine
@@ -166,7 +166,7 @@ rodarJogo dados topo jogador1 deck1 jogador2 deck2 jogador3 deck3 jogador4 deck4
                                    rodarJogo dados (getCarta deck1 (read op)) jogador1 (tiraUma deck1 (read op)) jogador2 deck2 jogador3 deck3 jogador4 deck4 2 reversed
                     else do putStrLn "\nTente outra carta!!"
                             rodarJogo dados topo jogador1 deck1 jogador2 deck2 jogador3 deck3 jogador4 deck4 1 reversed
-														
+
           -- OS DEMAIS IRAO JOGAR AUTOATICAMENTE (BOTS)
           else if (vez == 2)
                 then do putStr (jogador2 ++ ", é a sua vez! \n")
@@ -296,10 +296,14 @@ getCarta :: Deck -> Int -> Carta
 getCarta ((n,cor,efeito):xs) x | x == 0 = (n,cor,efeito)
                                      | otherwise = getCarta xs (x-1)
 
+showTopo :: Carta -> IO()
+showTopo s = do
+	putStrLn ("Topo : " ++ "Numero: " ++ show(getNumber s) ++ " Cor: " ++ getColor s ++ " Efeito: " ++ getEffect s ++ "\n")
+
 showCards :: Deck -> Int -> IO()
 showCards [] _ = return()
 showCards s n = do
-	putStrLn ((show n) ++ " - " ++ show (head s))
+	putStrLn ((show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ " Efeito: " ++ getEffect(head s))
 	showCards (tail s) (n+1)
 
 showLines :: [String] -> IO()
