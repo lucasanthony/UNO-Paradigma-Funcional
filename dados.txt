@@ -1,1 +1,1 @@
-[Jogador "Lucas" 0 [],Jogador "Temer" 0 [],Jogador "Dilma" 0 [],Jogador "Lula" 0 []]
+[Jogador "Lucas" 0 []]
