@@ -289,3 +289,17 @@ getNumber (n,_,_) = n
 getCarta :: Deck -> Int -> Carta
 getCarta ((n,cor,efeito):xs) x | x == 0 = (n,cor,efeito)
                                      | otherwise = getCarta xs (x-1)
+showLines :: [String] -> IO()
+showLines [] = return()
+showLines s = do
+	putStrLn (head s)
+	showLines (tail s)
+
+tela_principal :: IO()
+tela_principal = do
+    cont <- readFile ".msg"
+    showLines(take 37 (lines cont))
+main :: IO()
+main = do
+    tela_principal
+
