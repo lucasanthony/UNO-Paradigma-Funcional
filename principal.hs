@@ -145,8 +145,7 @@ rodarJogo :: Jogadores -> Carta ->  Nome -> Deck -> Nome -> Deck -> Nome -> Deck
 rodarJogo dados topo jogador1 deck1 jogador2 deck2 jogador3 deck3 jogador4 deck4 vez reversed = do
           putStrLn ("Topo : " ++ show topo ++ "\n")
           if (vez == 1)
-            then do putStrLn (jogador1 ++ ", é a sua vez! \n")
-                    putStrLn ("sua mao :\n" ++ show(showDeck deck1))
+            then do showCards deck1 0
                     op <- getLine
                     if ((getColor topo == getColor ((getCarta deck1 (read op))) || getColor(topo) == "first card"))
                         then do putStrLn "\nBoa jogada!"
@@ -167,7 +166,8 @@ rodarJogo dados topo jogador1 deck1 jogador2 deck2 jogador3 deck3 jogador4 deck4
                                    rodarJogo dados (getCarta deck1 (read op)) jogador1 (tiraUma deck1 (read op)) jogador2 deck2 jogador3 deck3 jogador4 deck4 2 reversed
                     else do putStrLn "\nTente outra carta!!"
                             rodarJogo dados topo jogador1 deck1 jogador2 deck2 jogador3 deck3 jogador4 deck4 1 reversed
-
+														
+          -- OS DEMAIS IRAO JOGAR AUTOATICAMENTE (BOTS)
           else if (vez == 2)
                 then do putStr (jogador2 ++ ", é a sua vez! \n")
                         putStrLn ("sua mao :\n" ++ show(showDeck deck2))
@@ -295,6 +295,13 @@ getNumber (n,_,_) = n
 getCarta :: Deck -> Int -> Carta
 getCarta ((n,cor,efeito):xs) x | x == 0 = (n,cor,efeito)
                                      | otherwise = getCarta xs (x-1)
+
+showCards :: Deck -> Int -> IO()
+showCards [] _ = return()
+showCards s n = do
+	putStrLn ((show n) ++ " - " ++ show (head s))
+	showCards (tail s) (n+1)
+
 showLines :: [String] -> IO()
 showLines [] = return()
 showLines s = do
