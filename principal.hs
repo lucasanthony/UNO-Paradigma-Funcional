@@ -81,7 +81,7 @@ executarOpcao dados '3' = do
     		getChar
     		menu dados
 executarOpcao dados '0' = do
-    		putStrLn ("\nBye! Visite: www.GeeksBR.com ;-)\n")
+    		putStrLn ("\nAte breve \n")
     		return dados
 executarOpcao dados _ = do
     		putStrLn ("\nOpção inválida! Tente novamente...")
@@ -107,6 +107,7 @@ cadastrarJogador dados = do
         	getChar
         	menu ((Jogador nome 0 mao):dados) -- retorna a nova lista para o menu
 
+-- Verifica se o nome do jogador já está cadastrado
 existeJogador :: Jogadores -> Nome -> Bool
 existeJogador [] _ = False
 existeJogador ((Jogador n p m):xs) nome
@@ -181,11 +182,11 @@ rodarJogo dados topo jogador1 deck1 jogador2 deck2 jogador3 deck3 jogador4 deck4
                 then do putStr (jogador2 ++ ", é a sua vez! \n")
                         putStrLn ("sua mao :\n" ++ show(showDeck deck2))
                         op <- getLine
-                        if (((getColor topo) == getColor (getCarta deck2 (read op)) || (getNumber topo) == getNumber (getCarta deck2 (read op))) && (read op > 0 && read op < size deck2))
+                        if (((getColor topo) == getColor (getCarta deck2 (read op)) || (getNumber topo) == getNumber (getCarta deck2 (read op))) && (read op >= 0 && read op < size deck2))
                             then do putStrLn "\nBoa jogada"
-                                    if (getEffect(getCarta deck1 (read op)) == "reverse" && reversed == False)
+                                    if (getEffect(getCarta deck2 (read op)) == "reverse" && reversed == False)
                                        then do rodarJogo dados (getCarta deck2 (read op)) jogador1 deck1 jogador2 (tiraUma deck2 (read op)) jogador3 deck3 jogador4 deck4 1 True
-                                    else if (getEffect(getCarta deck1 (read op)) == "reverse" && reversed == True) then do
+                                    else if (getEffect(getCarta deck2 (read op)) == "reverse" && reversed == True) then do
                                        rodarJogo dados (getCarta deck2 (read op)) jogador1 deck1 jogador2 (tiraUma deck2 (read op)) jogador3 deck3 jogador4 deck4 3 False
                                     else if (reversed == True) then do
                                        rodarJogo dados (getCarta deck2 (read op)) jogador1 deck1 jogador2 (tiraUma deck2 (read op)) jogador3 deck3 jogador4 deck4 1 reversed
@@ -198,7 +199,7 @@ rodarJogo dados topo jogador1 deck1 jogador2 deck2 jogador3 deck3 jogador4 deck4
                  putStr (jogador3 ++ ", é a sua vez! \n")
                  putStrLn ("sua mao :\n" ++ show(showDeck deck3))
                  op <- getLine
-                 if (((getColor topo) == getColor (getCarta deck3 (read op)) || (getNumber topo) == getNumber (getCarta deck3 (read op))) && (read op > 0 && read op < size deck3)) then do
+                 if (((getColor topo) == getColor (getCarta deck3 (read op)) || (getNumber topo) == getNumber (getCarta deck3 (read op))) && (read op >= 0 && read op < size deck3)) then do
                      putStrLn "\nBoa jogada"
                      rodarJogo dados (getCarta deck3 (read op)) jogador1 deck1 jogador2 deck2 jogador3 (tiraUma deck3 (read op)) jogador4 deck4 4 reversed
                  else do putStrLn "\nTente outra carta!!"
@@ -208,18 +209,21 @@ rodarJogo dados topo jogador1 deck1 jogador2 deck2 jogador3 deck3 jogador4 deck4
                  putStr (jogador4 ++ ", é a sua vez! \n")
                  putStrLn ("sua mao :\n" ++ show(showDeck deck4))
                  op <- getLine
-                 if (((getColor topo) == getColor (getCarta deck4 (read op)) || (getNumber topo) == getNumber (getCarta deck4 (read op))) && (read op > 0 && read op < size deck4)) then do
+                 if (((getColor topo) == getColor (getCarta deck4 (read op)) || (getNumber topo) == getNumber (getCarta deck4 (read op))) && (read op >= 0 && read op < size deck4)) then do
                      putStrLn "\nBoa jogada"
                      rodarJogo dados (getCarta deck4 (read op)) jogador1 deck1 jogador2 deck2 jogador3 deck3 jogador4 (tiraUma deck4 (read op)) 1 reversed
                  else do putStrLn "\nTente outra carta!!"
                          rodarJogo dados topo jogador1 deck1 jogador2 deck2 jogador3 deck3 jogador4 deck4 4 reversed
 
+-- Funcão para mostrar o deck
 showDeck :: Deck -> Deck
 showDeck deck = deck
 
-venceu :: Jogador -> Bool
-venceu (Jogador _ _ d) | size d == 0 = True
-                       | otherwise = False
+-- Função que verifica se o player venceu a partida,
+-- verificação feita pelo deck do mesmo
+venceu :: Deck -> Bool
+venceu d | size d == 0 = True
+         | otherwise = False
 
 atualizaPontuacao :: Jogadores -> String -> Jogadores
 atualizaPontuacao ((Jogador nome pontuacao mao):xs) vencedor
@@ -231,7 +235,7 @@ atualizaPontuacao ((Jogador nome pontuacao mao):xs) vencedor
 exibirRanking :: Jogadores -> IO ()
 exibirRanking [] = return ()
 exibirRanking (x:xs) = do
-      putStrLn ((obterNome x) ++ " possui " ++ (show (obterPontuacao x)) ++ " pontos")
+      putStrLn ((obterNome x) ++ " possui " ++ (show (obterPontuacao x)) ++ " vitorias")
       exibirRanking xs
 
 -- função que recebe um jogador e retorna o nome
@@ -246,15 +250,20 @@ obterPontuacao (Jogador _ pontuacao _) = pontuacao
 ordenar :: Jogadores -> Jogadores
 ordenar dados = sortBy (compare `on` obterPontuacao) dados
 
+-- Retorna o tamanho do deck
 size :: Deck -> Int
 size [] = 0
 size (x:xs) = 1 + size xs
 
+-- Funcao que retira 2 cartas do deck principal para colocar na mao de algum player
+-- quando uma carta +2 for usada
 tiraDuas :: Deck -> Deck
 tiraDuas [x,y] = []
 tiraDuas [x] = []
 tiraDuas (x:xs) = [x] ++ tiraDuas xs
 
+-- Funcao que retira 4 cartas do deck principal para colocar na mao de algum player
+-- quando uma carta +4 for usada
 tiraQuatro :: Deck -> Deck
 tiraQuatro [a,b,c,d] = []
 tiraQuatro [a,b,c] = []
@@ -263,29 +272,36 @@ tiraQuatro [a] = []
 tiraQuatro [] = []
 tiraQuatro (x:xs) = [x] ++ tiraQuatro xs
 
+--Funcao que retorna 2 cartas do deck principal que irao pra mao do player
 pegaDuas :: Deck -> Deck
 pegaDuas [x,y] = [x,y]
 pegaDuas (x:xs) = pegaDuas xs
 
+--Funcao que retorna 4 cartas do deck principal que irao pra mao do player
 pegaQuatro :: Deck -> Deck
 pegaQuatro [a,b,c,d] = [a,b,c,d]
 pegaQuatro (x:xs) = pegaQuatro xs
 
+-- Funcao para retirar uma carta especifica da mao do player
 tiraUma :: Deck -> Int -> Deck
 tiraUma [] _ = []
 tiraUma (_:xs) 0 = xs
 tiraUma (x:xs) n | n == 0 = tiraUma xs (n+1)
                  | otherwise = [x] ++ tiraUma xs (n-1)
 
+-- Retorna a cor da carta
 getColor :: Carta -> Cor
 getColor (_,cor,_) = cor
 
+-- Retorna o efeito da carta
 getEffect :: Carta -> Efeito
 getEffect (_,_,efeito) = efeito
 
+-- Retorna o número da carta
 getNumber :: Carta -> Numero
 getNumber (n,_,_) = n
 
+-- Retorna uma carta específica do deck passado como parâmetro
 getCarta :: Deck -> Int -> Carta
 getCarta ((n,cor,efeito):xs) x | x == 0 = (n,cor,efeito)
                                      | otherwise = getCarta xs (x-1)
@@ -302,4 +318,3 @@ tela_principal = do
 main :: IO()
 main = do
     tela_principal
-
