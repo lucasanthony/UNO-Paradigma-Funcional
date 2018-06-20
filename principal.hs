@@ -60,11 +60,11 @@ menu dados = do
     putStrLn "-------------------------------- Jogo UNO --------------------------------"
     putStrLn "\nDigite 1 para cadastrar jogador"
     putStrLn "Digite 2 para jogar"
-    putStrLn "Digite 3 para visualizar o ranking"
+    putStrLn "Digite 3 para visualizar o ranking\nDigite 4 para ver regras"
     putStrLn "Digite 0 para sair"
     putStr "Opção: "
     op <- getChar
-    getChar -- descarta o Enter
+    getChar
     executarOpcao dados op
 
 executarOpcao :: Jogadores -> Char -> IO Jogadores
@@ -83,6 +83,11 @@ executarOpcao dados '3' = do
 executarOpcao dados '0' = do
     		putStrLn ("\nAte breve \n")
     		return dados
+executarOpcao dados '4' = do
+				putStrLn ("\nCada jogador inicia o game com 7 cartas...")
+				putStr "\nPressione <Enter> para voltar ao menu..."
+				getChar
+				menu dados
 executarOpcao dados _ = do
     		putStrLn ("\nOpção inválida! Tente novamente...")
     		putStr "\nPressione <Enter> para voltar ao menu..."
@@ -116,37 +121,15 @@ existeJogador ((Jogador n p m):xs) nome
 
 prepararJogo :: Jogadores -> IO Jogadores
 prepararJogo dados = do
-      jogador1 <- getString "\nDigite o nome do primeiro jogador: "
+      jogador1 <- getString "\nDigite seu login: "
       			-- testa se o jogador1 existe
       if not (existeJogador dados jogador1) then do
-      	putStrLn "\nEsse jogador não existe!"
+      	putStrLn "\nLogin nao cadastrado!"
       	putStr "\nPressione <Enter> para continuar..."
       	getChar -- descarta o Enter
       	menu dados
-      	else do
-      		jogador2 <- getString "\nDigite o nome do segundo jogador: "
-      		if not (existeJogador dados jogador2) then do
-      			putStrLn "\nEsse jogador não existe!"
-      			putStr "\nPressione <Enter> para continuar..."
-      			getChar -- descarta o Enter
-      			menu dados
-      			else do
-      				jogador3 <- getString "\nDigite o nome do terceiro jogador: "
-      				if not (existeJogador dados jogador3) then do
-      					putStrLn "\nEsse jogador não existe!"
-      					putStr "\nPressione <Enter> para continuar..."
-      					getChar -- descarta o Enter
-      					menu dados
-      					else do
-      						jogador4 <- getString "\nDigite o nome do quarto jogador: "
-      						if not (existeJogador dados jogador4) then do
-      							putStrLn "\nEsse jogador não existe!"
-      							putStr "\nPressione <Enter> para continuar..."
-      							getChar -- descarta o Enter
-      							menu dados
-      							else do
-      											-- se chegou aqui, é porque os quatro jogadores existem
-      								novoJogo dados jogador1 deck1 jogador2 deck2 jogador3 deck3 jogador4 deck4
+      else do 					-- se chegou aqui, é porque os quatro jogadores existem
+      	novoJogo dados jogador1 deck1 "Lula" deck2 "Dilma" deck3 "Temer" deck4
 
 novoJogo :: Jogadores -> Nome -> Deck -> Nome -> Deck -> Nome -> Deck -> Nome -> Deck -> IO Jogadores
 novoJogo dados jogador1 deck1 jogador2 deck2 jogador3 deck3 jogador4 deck4 = do
