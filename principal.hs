@@ -147,7 +147,7 @@ rodarJogo dados topo jogador1 deck1 jogador2 deck2 jogador3 deck3 jogador4 deck4
           if (vez == 1)
             then do showCards deck1 0
                     op <- getLine
-                    if ((getColor topo == getColor ((getCarta deck1 (read op))) || getColor(topo) == "first card"))
+                    if ((getColor topo == getColor ((getCarta deck1 (read op))) || getColor(topo) == "first card") || getNumber topo == getNumber((getCarta deck1(read op))))
                         then do putStrLn "\nBoa jogada!"
 												        -- SE FOR A CARTA 'REVERSE' E O JOGO TIVER NO CURSO NORMAL, CHAMA O JOGADOR ANTERIOR E REVERSED TRUE
                                 if (getEffect(getCarta deck1 (read op)) == "reverse" && reversed == False)
