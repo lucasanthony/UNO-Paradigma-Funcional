@@ -57,12 +57,7 @@ inicio = do
 menu :: Jogadores -> IO Jogadores
 menu dados = do
     system "cls" -- limpa a tela (windows somente)
-    putStrLn "-------------------------------- Jogo UNO --------------------------------"
-    putStrLn "\nDigite 1 para cadastrar jogador"
-    putStrLn "Digite 2 para jogar"
-    putStrLn "Digite 3 para visualizar o ranking\nDigite 4 para ver regras"
-    putStrLn "Digite 0 para sair"
-    putStr "Opção: "
+    tela_principal
     op <- getChar
     getChar
     executarOpcao dados op
@@ -316,6 +311,25 @@ tela_principal :: IO()
 tela_principal = do
     cont <- readFile ".msg"
     showLines(take 37 (lines cont))
+
 main :: IO()
 main = do
     tela_principal
+
+{-		BLOCO DE CODIGO Q VAI SER USADO QUANDO ALGUEM VENCER O JOGO
+      if (venceuJogador1 tabela) then do
+			putStrLn ("Parábens " ++ jogador1 ++ "! Você venceu!!")
+
+			-- abre o arquivo para escrita para atualizá-lo
+			arq_escrita <- openFile "dados.txt" WriteMode
+			hPutStrLn arq_escrita (show (atualizaPontuacao dados jogador1))
+			hClose arq_escrita
+
+			-- abre o arquivo para leitura
+			arq_leitura <- openFile "dados.txt" ReadMode
+			dados_atualizados <- hGetLine arq_leitura
+			hClose arq_leitura
+
+			putStr "\nPressione <Enter> para voltar ao menu..."
+			getChar
+			menu (read dados_atualizados) -}
