@@ -291,15 +291,18 @@ getCarta :: Deck -> Int -> Carta
 getCarta ((n,cor,efeito):xs) x | x == 0 = (n,cor,efeito)
                                      | otherwise = getCarta xs (x-1)
 
+-- Exibe a carta do topo
 showTopo :: Carta -> IO()
 showTopo s = do
 	putStrLn ("Topo : " ++ "Numero: " ++ show(getNumber s) ++ " Cor: " ++ getColor s ++ " Efeito: " ++ getEffect s ++ "\n")
 
+-- Mostra as cartas do jogador
 showCards :: Deck -> Int -> IO()
 showCards [] _ = return()
 showCards s n = do
 	putStrLn ((show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ " Efeito: " ++ getEffect(head s))
 	showCards (tail s) (n+1)
+
 
 showLines :: [String] -> IO()
 showLines [] = return()
@@ -307,6 +310,7 @@ showLines s = do
 	putStrLn (head s)
 	showLines (tail s)
 
+-- Exibe a tela principal do game
 tela_principal :: IO()
 tela_principal = do
     cont <- readFile ".msg"
