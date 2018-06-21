@@ -126,36 +126,44 @@ rodarJogo :: Jogadores -> Carta -> Deck -> Nome -> Deck -> Deck -> Deck -> Deck-
 rodarJogo dados topo pilha jogador1 deck1 deck2 deck3 deck4 vez reversed = do
  showTopo topo
  if (vez == 1)
-   then do showCards deck1 0
-           op <- getLine
-           if ((getColor topo == getColor ((getCarta deck1 (read op))) || getColor(topo) == "first card") || getNumber topo == getNumber((getCarta deck1(read op))))
-             then do putStrLn "\nBoa jogada!"
-							       -- SE FOR A CARTA 'REVERSE' E O JOGO TIVER NO CURSO NORMAL, CHAMA O JOGADOR ANTERIOR E REVERSED TRUE
-                     if (getEffect(getCarta deck1 (read op)) == "reverse" && reversed == False)
-                       then do rodarJogo dados (getCarta deck1 (read op)) pilha jogador1 (pickPlay deck1 (read op)) deck2 deck3 deck4 4 True
-										 -- SE FOR A CARTA 'REVERSE' E O JOGO TIVER NO CURSO INVERSO, CHAMA O PROXIMO JOGADOR E REVERSED FALSE
-                     else if (getEffect(getCarta deck1 (read op)) == "reverse" && reversed == True)
-										   then do rodarJogo dados (getCarta deck1 (read op)) pilha jogador1 (pickPlay deck1 (read op)) deck2 deck3 deck4 2 False
-										 -- SE FOR A CARTA BLOCK, CHAMA O JOGADOR '3'
-										 else if (getEffect(getCarta deck1 (read op)) == "block")
-	 									   then do rodarJogo dados (getCarta deck1 (read op)) pilha jogador1 (pickPlay deck1 (read op)) deck2 deck3 deck4 3 reversed
-										 -- SE FOR A CARTA +2
-										 else if (getEffect(getCarta deck1 (read op)) == "+2")
-										   then do
-										            -- SE TIVER INVERTIDO, TIRA 2 DA PILHA E COLOCA NA MAO DO 4
-										            if (reversed == True)
-																  then do rodarJogo dados (getCarta deck1 (read op)) (tiraDuas pilha) jogador1 (pickPlay deck1 (read op)) deck2 deck3 (deck4++(pegaDuas pilha)) 4 reversed
-																-- SE TIVER NORMAL, TIRA 2 DA PILHA E COLOCA NA MAO DO 2
-																else
-										  					  do rodarJogo dados (getCarta deck1 (read op)) (tiraDuas pilha) jogador1 (pickPlay deck1 (read op)) (deck2++(pegaDuas pilha)) deck3 deck4 2 reversed
-										 -- SE FOR CARTA NORMAL E O JOGO TIVER INVERTIDO, CHAMA O JOGADOR 4
-                     else if (reversed == True)
-										   then do rodarJogo dados (getCarta deck1 (read op)) pilha jogador1 (pickPlay deck1 (read op)) deck2 deck3 deck4 4 reversed
-										 -- SE CHEGOU AQUI, ESTA TUDO COMO INICIA, CHAMA COMO ESTA
-										   else do
-                               rodarJogo dados (getCarta deck1 (read op)) pilha jogador1 (pickPlay deck1 (read op)) deck2 deck3 deck4 2 reversed
-           else do putStrLn "\nTente outra carta!!"
-                   rodarJogo dados topo pilha jogador1 deck1 deck2 deck3 deck4 1 reversed
+   then do
+		 showCards deck1 0
+		 op <- getLine
+		 if ((getColor topo == getColor ((getCarta deck1 (read op))) || getColor(topo) == "first card") || getNumber topo == getNumber((getCarta deck1(read op))))
+			 then do
+				 putStrLn "\nBoa jogada!"
+				 -- SE FOR A CARTA 'REVERSE' E O JOGO TIVER NO CURSO NORMAL, CHAMA O JOGADOR ANTERIOR E REVERSED TRUE
+				 if (getEffect(getCarta deck1 (read op)) == "reverse" && reversed == False)
+					 then do
+						 rodarJogo dados (getCarta deck1 (read op)) pilha jogador1 (pickPlay deck1 (read op)) deck2 deck3 deck4 4 True
+			   -- SE FOR A CARTA 'REVERSE' E O JOGO TIVER NO CURSO INVERSO, CHAMA O PROXIMO JOGADOR E REVERSED FALSE
+				 else if (getEffect(getCarta deck1 (read op)) == "reverse" && reversed == True)
+			     then do
+						 rodarJogo dados (getCarta deck1 (read op)) pilha jogador1 (pickPlay deck1 (read op)) deck2 deck3 deck4 2 False
+			   -- SE FOR A CARTA BLOCK, CHAMA O JOGADOR '3'
+				 else if (getEffect(getCarta deck1 (read op)) == "block")
+				   then do
+				  	 rodarJogo dados (getCarta deck1 (read op)) pilha jogador1 (pickPlay deck1 (read op)) deck2 deck3 deck4 3 reversed
+			   -- SE FOR A CARTA +2
+				 else if (getEffect(getCarta deck1 (read op)) == "+2")
+				   then do
+			       -- SE TIVER INVERTIDO, TIRA 2 DA PILHA E COLOCA NA MAO DO 4
+					   if (reversed == True)
+					  	 then do
+					  		 rodarJogo dados (getCarta deck1 (read op)) (tiraDuas pilha) jogador1 (pickPlay deck1 (read op)) deck2 deck3 (deck4++(pegaDuas pilha)) 4 reversed
+				  	 -- SE TIVER NORMAL, TIRA 2 DA PILHA E COLOCA NA MAO DO 2
+				  	 else do
+				  		 rodarJogo dados (getCarta deck1 (read op)) (tiraDuas pilha) jogador1 (pickPlay deck1 (read op)) (deck2++(pegaDuas pilha)) deck3 deck4 2 reversed
+			   -- SE FOR CARTA NORMAL E O JOGO TIVER INVERTIDO, CHAMA O JOGADOR 4
+				 else if (reversed == True)
+		  		 then do
+			  		 rodarJogo dados (getCarta deck1 (read op)) pilha jogador1 (pickPlay deck1 (read op)) deck2 deck3 deck4 4 reversed
+			   -- SE CHEGOU AQUI, ESTA TUDO COMO INICIA, CHAMA COMO ESTA
+				 else do
+				   rodarJogo dados (getCarta deck1 (read op)) pilha jogador1 (pickPlay deck1 (read op)) deck2 deck3 deck4 2 reversed
+		 else do
+			 putStrLn "\nTente outra carta!!"
+			 rodarJogo dados topo pilha jogador1 deck1 deck2 deck3 deck4 1 reversed
 
           -- OS DEMAIS IRAO JOGAR AUTOATICAMENTE (BOTS)
  else if (vez == 2)
@@ -165,13 +173,16 @@ rodarJogo dados topo pilha jogador1 deck1 deck2 deck3 deck4 vez reversed = do
            if (((getColor topo) == getColor (getCarta deck2 (read op)) || (getNumber topo) == getNumber (getCarta deck2 (read op))) && (read op >= 0 && read op < size deck2))
              then do putStrLn "\nBoa jogada"
                      if (getEffect(getCarta deck2 (read op)) == "reverse" && reversed == False)
-                       then do rodarJogo dados (getCarta deck2 (read op)) pilha jogador1 deck1 (pickPlay deck2 (read op)) deck3 deck4 1 True
+                       then do
+												 rodarJogo dados (getCarta deck2 (read op)) pilha jogador1 deck1 (pickPlay deck2 (read op)) deck3 deck4 1 True
                      else if (getEffect(getCarta deck2 (read op)) == "reverse" && reversed == True)
-											 then do rodarJogo dados (getCarta deck2 (read op)) pilha jogador1 deck1 (pickPlay deck2 (read op)) deck3 deck4 3 False
+											 then do
+												 rodarJogo dados (getCarta deck2 (read op)) pilha jogador1 deck1 (pickPlay deck2 (read op)) deck3 deck4 3 False
                      else if (reversed == True)
-											 then do rodarJogo dados (getCarta deck2 (read op)) pilha jogador1 deck1 (pickPlay deck2 (read op)) deck3 deck4 1 reversed
-                     else
-											 do rodarJogo dados (getCarta deck2 (read op)) pilha jogador1 deck1 (pickPlay deck2 (read op)) deck3 deck4 3 reversed
+											 then do
+												 rodarJogo dados (getCarta deck2 (read op)) pilha jogador1 deck1 (pickPlay deck2 (read op)) deck3 deck4 1 reversed
+                     else do
+											 rodarJogo dados (getCarta deck2 (read op)) pilha jogador1 deck1 (pickPlay deck2 (read op)) deck3 deck4 3 reversed
            else do putStrLn "\nTente outra carta!!"
                    rodarJogo dados topo pilha jogador1 deck1 deck2 deck3 deck4 2 reversed
 
@@ -180,19 +191,23 @@ rodarJogo dados topo pilha jogador1 deck1 deck2 deck3 deck4 vez reversed = do
            putStrLn ("sua mao :\n" ++ show(showDeck deck3))
            op <- getLine
            if (((getColor topo) == getColor (getCarta deck3 (read op)) || (getNumber topo) == getNumber (getCarta deck3 (read op))) && (read op >= 0 && read op < size deck3))
-					   then do putStrLn "\nBoa jogada"
-                     rodarJogo dados (getCarta deck3 (read op)) pilha jogador1 deck1 deck2 (pickPlay deck3 (read op)) deck4 4 reversed
-           else do putStrLn "\nTente outra carta!!"
-                   rodarJogo dados topo pilha jogador1 deck1 deck2 deck3 deck4 3 reversed
+		         then do
+							 putStrLn "\nBoa jogada"
+							 rodarJogo dados (getCarta deck3 (read op)) pilha jogador1 deck1 deck2 (pickPlay deck3 (read op)) deck4 4 reversed
+           else do
+						 putStrLn "\nTente outra carta!!"
+						 rodarJogo dados topo pilha jogador1 deck1 deck2 deck3 deck4 3 reversed
 
  else do putStr ("Temer, é a sua vez! \n")
          putStrLn ("sua mao :\n" ++ show(showDeck deck4))
          op <- getLine
          if (((getColor topo) == getColor (getCarta deck4 (read op)) || (getNumber topo) == getNumber (getCarta deck4 (read op))) && (read op >= 0 && read op < size deck4))
-				   then do putStrLn "\nBoa jogada"
-                   rodarJogo dados (getCarta deck4 (read op)) pilha jogador1 deck1 deck2 deck3 (pickPlay deck4 (read op)) 1 reversed
-         else do putStrLn "\nTente outra carta!!"
-                 rodarJogo dados topo pilha jogador1 deck1 deck2 deck3 deck4 4 reversed
+				   then do
+						 putStrLn "\nBoa jogada"
+						 rodarJogo dados (getCarta deck4 (read op)) pilha jogador1 deck1 deck2 deck3 (pickPlay deck4 (read op)) 1 reversed
+         else do
+					 putStrLn "\nTente outra carta!!"
+					 rodarJogo dados topo pilha jogador1 deck1 deck2 deck3 deck4 4 reversed
 
 -- Funcão para mostrar o deck
 showDeck :: Deck -> Deck
