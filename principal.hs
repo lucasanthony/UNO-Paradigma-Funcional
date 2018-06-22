@@ -124,6 +124,7 @@ novoJogo dados jogador1 deck1 deck2 deck3 deck4 = do
 
 rodarJogo :: Jogadores -> Carta -> Deck -> Nome -> Deck -> Deck -> Deck -> Deck-> Vez -> Bool -> IO Jogadores
 rodarJogo dados topo pilha jogador1 deck1 deck2 deck3 deck4 vez reversed = do
+ cleanScreen
  showTopo topo
  if (vez == 1)
    then do
@@ -136,9 +137,9 @@ rodarJogo dados topo pilha jogador1 deck1 deck2 deck3 deck4 vez reversed = do
 				 if (getEffect(getCarta deck1 (read op)) == "reverse" && reversed == False)
 					 then do
 						 rodarJogo dados (getCarta deck1 (read op)) pilha jogador1 (pickPlay deck1 (read op)) deck2 deck3 deck4 4 True
-			   -- SE FOR A CARTA 'REVERSE' E O JOGO TIVER NO CURSO INVERSO, CHAMA O PROXIMO JOGADOR E REVERSED FALSE
+				 -- SE FOR A CARTA 'REVERSE' E O JOGO TIVER NO CURSO INVERSO, CHAMA O PROXIMO JOGADOR E REVERSED FALSE
 				 else if (getEffect(getCarta deck1 (read op)) == "reverse" && reversed == True)
-			     then do
+					 then do
 						 rodarJogo dados (getCarta deck1 (read op)) pilha jogador1 (pickPlay deck1 (read op)) deck2 deck3 deck4 2 False
 			   -- SE FOR A CARTA BLOCK, CHAMA O JOGADOR '3'
 				 else if (getEffect(getCarta deck1 (read op)) == "block")
@@ -152,8 +153,8 @@ rodarJogo dados topo pilha jogador1 deck1 deck2 deck3 deck4 vez reversed = do
 					  	 then do
 					  		 rodarJogo dados (getCarta deck1 (read op)) (tiraDuas pilha) jogador1 (pickPlay deck1 (read op)) deck2 deck3 (deck4++(pegaDuas pilha)) 4 reversed
 				  	 -- SE TIVER NORMAL, TIRA 2 DA PILHA E COLOCA NA MAO DO 2
-				  	 else do
-				  		 rodarJogo dados (getCarta deck1 (read op)) (tiraDuas pilha) jogador1 (pickPlay deck1 (read op)) (deck2++(pegaDuas pilha)) deck3 deck4 2 reversed
+						 else do
+							 rodarJogo dados (getCarta deck1 (read op)) (tiraDuas pilha) jogador1 (pickPlay deck1 (read op)) (deck2++(pegaDuas pilha)) deck3 deck4 2 reversed
 			   -- SE FOR CARTA NORMAL E O JOGO TIVER INVERTIDO, CHAMA O JOGADOR 4
 				 else if (reversed == True)
 		  		 then do
@@ -228,6 +229,10 @@ tela_principal = do
 main :: IO()
 main = do
     tela_principal
+
+-- Limpa a tela
+cleanScreen :: IO()
+cleanScreen = putStr "\ESC[1J"
 
 {-		BLOCO DE CODIGO Q VAI SER USADO QUANDO ALGUEM VENCER O JOGO
       if (venceuJogador1 tabela) then do
