@@ -72,8 +72,7 @@ executarOpcao dados '0' = do
     		putStrLn ("\nAte breve \n")
     		return dados
 executarOpcao dados '4' = do
-				putStrLn ("\nCada jogador inicia o game com 7 cartas...")
-				putStr "\nPressione <Enter> para voltar ao menu..."
+				showRules
 				getChar
 				menu dados
 executarOpcao dados _ = do
@@ -232,6 +231,11 @@ tela_principal :: IO()
 tela_principal = do
     cont <- readFile ".msg"
     showLines(take 37 (lines cont))
+
+showRules :: IO()
+showRules = do
+    cont <- readFile "regras.msg"
+    showLines(take 12 (lines cont))
 
 main :: IO()
 main = do
