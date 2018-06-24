@@ -21,3 +21,9 @@ getNumber (n,_,_) = n
 showTopo :: Carta -> IO()
 showTopo s = do
     putStrLn ("Topo : " ++ "Numero: " ++ show(getNumber s) ++ " Cor: " ++ getColor s ++ " Efeito: " ++ getEffect s ++ "\n")
+
+-- Verifica se a carta escolhida é válida
+cartaValida :: Carta -> Carta -> Bool
+cartaValida carta topo | getColor topo == getColor carta || getColor topo == "first card" || getNumber topo == getNumber carta || ((getEffect topo == getEffect carta) && (getEffect carta /= "none")) = True 
+                       | otherwise = False
+

@@ -131,7 +131,7 @@ rodarJogo dados topo pilha jogador1 deck1 deck2 deck3 deck4 vez reversed = do
       then do
         showCards deck1 0
         op <- getLine
-        if ((getColor topo == getColor ((getCarta deck1 (read op))) || getColor(topo) == "first card") || getNumber topo == getNumber((getCarta deck1(read op))))
+        if (cartaValida (getCarta deck1 (read op)) topo)
           then do
           -- SE FOR A CARTA 'REVERSE' E O JOGO TIVER NO CURSO NORMAL, CHAMA O JOGADOR ANTERIOR E REVERSED TRUE
           if (getEffect(getCarta deck1 (read op)) == "reverse" && reversed == False)
@@ -161,15 +161,15 @@ rodarJogo dados topo pilha jogador1 deck1 deck2 deck3 deck4 vez reversed = do
 		else do
 		 	putStrLn "\nVoce nao possui carta valida, pegue uma da pilha pressionando <Enter>"
 			getChar
-			if (getColor(pegaUma pilha) == getColor topo || getNumber(pegaUma pilha) == getNumber topo || (getEffect(pegaUma pilha) == getEffect topo && getEffect topo /= "none"))
+			if (cartaValida (pegaUma pilha) topo)
 				then do
 					if (reversed == True)
 						then do rodarJogo dados (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 deck4 4 reversed
-					else do rodarJogo dados (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 deck4 3 reversed
+					else do rodarJogo dados (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 deck4 2 reversed
 			else do
 				if (reversed == True)
 					then do rodarJogo dados topo (tiraUma pilha) jogador1 (deck1 ++ [pegaUma pilha]) deck2 deck3 deck4 4 reversed
-				else do rodarJogo dados (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 deck4 3 reversed
+				else do rodarJogo dados (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 deck4 2 reversed
 
 
           -- OS DEMAIS IRAO JOGAR AUTOATICAMENTE (BOTS)
