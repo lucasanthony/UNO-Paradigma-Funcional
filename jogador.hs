@@ -5,7 +5,7 @@ import Data.List
 import Data.Function
 
 data Jogador = Jogador Nome Pontuacao Mao
-					deriving (Show, Read)
+                  deriving (Show, Read)
 type Jogadores = [Jogador]
 type Nome = String
 type Pontuacao = Int

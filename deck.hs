@@ -12,8 +12,12 @@ size (x:xs) = 1 + size xs
 -- VERIFICA SE O JOGADOR TEM ALGUMA CARTA Q DA MATCH COM A DO TOPO
 podeJogar :: Deck -> Carta -> Bool
 podeJogar [] _ = False
-podeJogar (x:xs) (n,c,e) | getColor x == c || getNumber x == n || (getEffect x == e && e /= "none") = True
+podeJogar (x:xs) (n,c,e) | getColor x == c || getNumber x == n || (getEffect x == e && e /= "none") || c == "first card" = True
                          | otherwise = podeJogar xs (n,c,e)
+
+pegaUma :: Deck -> Carta
+pegaUma [x] = x
+pegaUma (x:xs) = pegaUma xs
 
 tiraUma :: Deck -> Deck
 tiraUma [x] = []

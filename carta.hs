@@ -20,4 +20,4 @@ getNumber (n,_,_) = n
 -- Exibe a carta do topo
 showTopo :: Carta -> IO()
 showTopo s = do
-	putStrLn ("Topo : " ++ "Numero: " ++ show(getNumber s) ++ " Cor: " ++ getColor s ++ " Efeito: " ++ getEffect s ++ "\n")
+    putStrLn ("Topo : " ++ "Numero: " ++ show(getNumber s) ++ " Cor: " ++ getColor s ++ " Efeito: " ++ getEffect s ++ "\n")
