@@ -235,7 +235,7 @@ tela_principal = do
 showRules :: IO()
 showRules = do
     cont <- readFile "regras.msg"
-    showLines(take 12 (lines cont))
+    showLines(take 18 (lines cont))
 
 main :: IO()
 main = do
