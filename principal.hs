@@ -24,7 +24,7 @@ getString str = do
 
 inicio :: IO ()
 inicio = do
-  menu -- passa uma lista vazia para o menu
+  menu
 
 menu :: IO ()
 menu = do
@@ -44,10 +44,10 @@ executarOpcao '4' = do
   getChar
   menu
 executarOpcao _ = do
-    		putStrLn ("\nOpção inválida! Tente novamente...")
-    		putStr "\nPressione <Enter> para voltar ao menu..."
-    		getChar
-    		menu
+        putStrLn ("\nOpção inválida! Tente novamente...")
+        putStr "\nPressione <Enter> para voltar ao menu..."
+        getChar
+        menu
 
 prepararJogo :: IO ()
 prepararJogo = do
@@ -80,10 +80,9 @@ rodarJogo topo pilha jogador1 deck1 deck2 deck3 deck4 vez reversed = do
          putStrLn ("sua mao :\n" ++ show(showDeck deck3))
          op <- getLine
          if (((getColor topo) == getColor (getCarta deck3 (read op)) || (getNumber topo) == getNumber (getCarta deck3 (read op))) && (read op >= 0 && read op < size deck3))
-		       then do rodarJogo (getCarta deck3 (read op)) pilha jogador1 deck1 deck2 (pickPlay deck3 (read op)) deck4 1 reversed
+           then do rodarJogo (getCarta deck3 (read op)) pilha jogador1 deck1 deck2 (pickPlay deck3 (read op)) deck4 1 reversed
          else do rodarJogo topo pilha jogador1 deck1 deck2 deck3 deck4 3 reversed
 
---
 
 gerenciaPlayer :: Carta -> Deck -> Nome -> Deck -> Deck -> Deck -> Deck -> Bool -> IO ()
 gerenciaPlayer topo pilha jogador1 deck1 deck2 deck3 deck4 reversed = do
@@ -174,15 +173,11 @@ gerenciaBot1 topo pilha jogador1 deck1 deck2 deck3 deck4 reversed = do
             else do rodarJogo topo (tiraUma pilha) jogador1 deck1 (deck2 ++ [pegaUma pilha]) deck3 deck4 3 reversed
 
 
--- Funcão para mostrar o deck
-showDeck :: Deck -> Deck
-showDeck deck = deck
-
 showLines :: [String] -> IO()
 showLines [] = return()
 showLines s = do
-	putStrLn (head s)
-	showLines (tail s)
+  putStrLn (head s)
+  showLines (tail s)
 
 -- Exibe a tela principal do game
 tela_principal :: IO()
@@ -202,21 +197,3 @@ main = do
 -- Limpa a tela
 cleanScreen :: IO()
 cleanScreen = putStr "\ESC[1J"
-
-{-		BLOCO DE CODIGO Q VAI SER USADO QUANDO ALGUEM VENCER O JOGO
-      if (venceuJogador1 tabela) then do
-			putStrLn ("Parábens " ++ jogador1 ++ "! Você venceu!!")
-
-			-- abre o arquivo para escrita para atualizá-lo
-			arq_escrita <- openFile "dados.txt" WriteMode
-			hPutStrLn arq_escrita (show (atualizaPontuacao dados jogador1))
-			hClose arq_escrita
-
-			-- abre o arquivo para leitura
-			arq_leitura <- openFile "dados.txt" ReadMode
-			dados_atualizados <- hGetLine arq_leitura
-			hClose arq_leitura
-
-			putStr "\nPressione <Enter> para voltar ao menu..."
-			getChar
-			menu (read dados_atualizados) -}

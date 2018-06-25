@@ -74,3 +74,7 @@ showCards s n = do
 venceu :: Deck -> Bool
 venceu d | size d == 0 = True
          | otherwise = False
+
+-- Funcão para mostrar o deck
+showDeck :: Deck -> Deck
+showDeck deck = deck
