@@ -49,7 +49,6 @@ executarOpcao _ = do
 prepararJogo :: IO ()
 prepararJogo = do
       jogador1 <- getString "\nDigite seu login: "
-      -- se chegou aqui, é porque os quatro jogadores existem
       novoJogo jogador1 deck1 deck2 deck3
 
 novoJogo :: Nome -> Deck -> Deck -> Deck -> IO ()
@@ -59,23 +58,31 @@ novoJogo jogador1 deck1 deck2 deck3 = do
           putStrLn ("lets do this!!\n")
           rodarJogo (0,"first card","none") pilha jogador1 deck1 deck2 deck3 1 False
 
-
-
 rodarJogo :: Carta -> Deck -> Nome -> Deck -> Deck -> Deck -> Vez -> Bool -> IO ()
 rodarJogo topo pilha jogador1 deck1 deck2 deck3 vez reversed = do
  cleanScreen
- showTopo topo
- if (vez == 1)
+ if (venceu deck1)
+   then do
+     putStrLn ("Você venceu, parabéns!!")
+ else if (venceu deck2)
+   then do
+     putStrLn ("Lula agora está livre, você perdeu!!")
+ else if (venceu deck3)
+   then do
+     putStrLn ("Dilmãe voltou à presidência, você perdeu!!")
+ else if (vez == 1)
   then do
+    showTopo topo
     gerenciaPlayer topo pilha jogador1 deck1 deck2 deck3 reversed
  -- OS DEMAIS IRAO JOGAR AUTOATICAMENTE (BOTS)
  else if (vez == 2)
    then do
+     showTopo topo
      gerenciaBot1 topo pilha jogador1 deck1 deck2 deck3 reversed
 
  else do
+   showTopo topo
    gerenciaBot2 topo pilha jogador1 deck1 deck2 deck3 reversed
-
 
 gerenciaPlayer :: Carta -> Deck -> Nome -> Deck -> Deck -> Deck -> Bool -> IO ()
 gerenciaPlayer topo pilha jogador1 deck1 deck2 deck3 reversed = do
@@ -166,7 +173,6 @@ gerenciaBot1 topo pilha jogador1 deck1 deck2 deck3 reversed = do
             if (reversed == True) then do
               rodarJogo topo (tiraUma pilha) jogador1 deck1 (deck2 ++ [pegaUma pilha]) deck3 1 reversed
             else do rodarJogo topo (tiraUma pilha) jogador1 deck1 (deck2 ++ [pegaUma pilha]) deck3 3 reversed
-
 
 gerenciaBot2 :: Carta -> Deck -> Nome -> Deck -> Deck -> Deck -> Bool -> IO ()
 gerenciaBot2 topo pilha jogador1 deck1 deck2 deck3 reversed = do
