@@ -24,126 +24,69 @@ getString str = do
 
 inicio :: IO ()
 inicio = do
-    {catch (ler_arquivo) tratar_erro;}
-    where
-      -- tenta ler o arquivo
-      ler_arquivo = do
-      {
-        arq <- openFile "dados.txt" ReadMode; -- abre o arquivo para leitura
-        dados <- hGetLine arq; -- ler o conteúdo do arquivo
-        hClose arq; -- fecha o arquivo
-        menu (read dados); -- passa os dados para a função menu
-        return ()
-      }
-      tratar_erro erro = if isDoesNotExistError erro then do
-      {
-       				-- se o arquivo NÃO existir, então cria o arquivo
-       	arq <- openFile "dados.txt" WriteMode; -- abre o arquivo para escrita
-       	hPutStrLn arq "[]"; -- escreve uma lista vazia no arquivo
-       	hClose arq; -- fecha o arquivo
-       	menu []; -- passa uma lista vazia para o menu
-       	return ()
-      }
-      else
-       	ioError erro
+  menu -- passa uma lista vazia para o menu
 
-menu :: Jogadores -> IO Jogadores
-menu dados = do
+menu :: IO ()
+menu = do
     system "cls" -- limpa a tela (windows somente)
     tela_principal
     op <- getChar
     getChar
-    executarOpcao dados op
+    executarOpcao op
 
-executarOpcao :: Jogadores -> Char -> IO Jogadores
-executarOpcao dados '1' = cadastrarJogador dados
-executarOpcao dados '2' = prepararJogo dados
-executarOpcao dados '3' = do
-    		putStrLn "\nRanking dos jogadores:\n"
-    		if (null dados) then do
-    			putStrLn ("Não há jogadores cadastrados!")
-    		else
-    					-- a função ordenar ordena crescentemente pela pontuação
-    			exibirRanking (reverse (ordenar dados))
-    		putStr "\nPressione <Enter> para voltar ao menu..."
-    		getChar
-    		menu dados
-executarOpcao dados '0' = do
-    		putStrLn ("\nAte breve \n")
-    		return dados
-executarOpcao dados '4' = do
-				showRules
-				getChar
-				menu dados
-executarOpcao dados _ = do
+executarOpcao :: Char -> IO ()
+executarOpcao '2' = prepararJogo
+executarOpcao '0' = do
+  putStrLn ("\nAte breve \n")
+  menu
+executarOpcao '4' = do
+  showRules
+  getChar
+  menu
+executarOpcao _ = do
     		putStrLn ("\nOpção inválida! Tente novamente...")
     		putStr "\nPressione <Enter> para voltar ao menu..."
     		getChar
-    		menu dados
+    		menu
 
-cadastrarJogador :: Jogadores -> IO Jogadores
-cadastrarJogador dados = do
-        nome <- getString "\nDigite um nome de usuário: "
-        let mao = []
-        if (existeJogador dados nome) then do
-        	putStrLn "\nEsse nome já existe, escolha outro."
-        	putStr "\nPressione <Enter> para continuar..."
-        	getChar
-        	menu dados
-        else do
-        	arq <- openFile "dados.txt" WriteMode -- abre o arquivo para escrita
-        	hPutStrLn arq (show ((Jogador nome 0 mao):dados))
-        	hClose arq -- fecha o arquivo
-        	putStrLn ("\nUsuário " ++ nome ++ " cadastrado com sucesso.")
-        	putStr "\nPressione <Enter> para continuar..."
-        	getChar
-        	menu ((Jogador nome 0 mao):dados) -- retorna a nova lista para o menu
-
-
-prepararJogo :: Jogadores -> IO Jogadores
-prepararJogo dados = do
+prepararJogo :: IO ()
+prepararJogo = do
       jogador1 <- getString "\nDigite seu login: "
-      			-- testa se o jogador1 existe
-      if not (existeJogador dados jogador1) then do
-      	putStrLn "\nLogin nao cadastrado!"
-      	putStr "\nPressione <Enter> para continuar..."
-      	getChar -- descarta o Enter
-      	menu dados
-      else do 					-- se chegou aqui, é porque os quatro jogadores existem
-      	novoJogo dados jogador1 deck1 deck2 deck3 deck4
+      -- se chegou aqui, é porque os quatro jogadores existem
+      novoJogo jogador1 deck1 deck2 deck3 deck4
 
-novoJogo :: Jogadores -> Nome -> Deck -> Deck -> Deck -> Deck -> IO Jogadores
-novoJogo dados jogador1 deck1 deck2 deck3 deck4 = do
+novoJogo :: Nome -> Deck -> Deck -> Deck -> Deck -> IO ()
+novoJogo jogador1 deck1 deck2 deck3 deck4 = do
           putStrLn ("\nIniciando o jogo \"" ++
               jogador1 ++ " vs Lula vs Dilma vs Temer" ++ "\" ... ")
           putStrLn ("lets do this!!\n")
-          rodarJogo dados (0,"first card","none") pilha jogador1 deck1 deck2 deck3 deck4 1 False
+          rodarJogo (0,"first card","none") pilha jogador1 deck1 deck2 deck3 deck4 1 False
 
 
 
-rodarJogo :: Jogadores -> Carta -> Deck -> Nome -> Deck -> Deck -> Deck -> Deck-> Vez -> Bool -> IO Jogadores
-rodarJogo dados topo pilha jogador1 deck1 deck2 deck3 deck4 vez reversed = do
+rodarJogo :: Carta -> Deck -> Nome -> Deck -> Deck -> Deck -> Deck-> Vez -> Bool -> IO ()
+rodarJogo topo pilha jogador1 deck1 deck2 deck3 deck4 vez reversed = do
  cleanScreen
  showTopo topo
  if (vez == 1)
   then do
-    gerenciaPlayer dados topo pilha jogador1 deck1 deck2 deck3 deck4 reversed
+    gerenciaPlayer topo pilha jogador1 deck1 deck2 deck3 deck4 reversed
  -- OS DEMAIS IRAO JOGAR AUTOATICAMENTE (BOTS)
  else if (vez == 2)
    then do
-     gerenciaBot1 dados topo pilha jogador1 deck1 deck2 deck3 deck4 reversed
+     gerenciaBot1 topo pilha jogador1 deck1 deck2 deck3 deck4 reversed
 
  else do putStr ("Dilma, é a sua vez! \n")
          putStrLn ("sua mao :\n" ++ show(showDeck deck3))
          op <- getLine
          if (((getColor topo) == getColor (getCarta deck3 (read op)) || (getNumber topo) == getNumber (getCarta deck3 (read op))) && (read op >= 0 && read op < size deck3))
-		       then do rodarJogo dados (getCarta deck3 (read op)) pilha jogador1 deck1 deck2 (pickPlay deck3 (read op)) deck4 1 reversed
-         else do rodarJogo dados topo pilha jogador1 deck1 deck2 deck3 deck4 3 reversed
+		       then do rodarJogo (getCarta deck3 (read op)) pilha jogador1 deck1 deck2 (pickPlay deck3 (read op)) deck4 1 reversed
+         else do rodarJogo topo pilha jogador1 deck1 deck2 deck3 deck4 3 reversed
 
 --
 
-gerenciaPlayer :: Jogadores -> Carta -> Deck -> Nome -> Deck -> Deck -> Deck -> Deck -> Bool -> IO Jogadores
-gerenciaPlayer dados topo pilha jogador1 deck1 deck2 deck3 deck4 reversed = do
+gerenciaPlayer :: Carta -> Deck -> Nome -> Deck -> Deck -> Deck -> Deck -> Bool -> IO ()
+gerenciaPlayer topo pilha jogador1 deck1 deck2 deck3 deck4 reversed = do
   showCards deck1 0
   opcao <- getLine
   let op = read opcao
@@ -151,43 +94,43 @@ gerenciaPlayer dados topo pilha jogador1 deck1 deck2 deck3 deck4 reversed = do
     if (cartaValida (getCarta deck1 op) topo) then do
        -- SE FOR A CARTA 'REVERSE' E O JOGO TIVER NO CURSO NORMAL, CHAMA O JOGADOR ANTERIOR E REVERSED TRUE
       if (getEffect(getCarta deck1 op) == "reverse" && reversed == False) then do
-        rodarJogo dados (getCarta deck1 op) pilha jogador1 (pickPlay deck1 op) deck2 deck3 deck4 4 True
+        rodarJogo (getCarta deck1 op) pilha jogador1 (pickPlay deck1 op) deck2 deck3 deck4 4 True
   -- SE FOR A CARTA 'REVERSE' E O JOGO TIVER NO CURSO INVERSO, CHAMA O PROXIMO JOGADOR E REVERSED FALSE
       else if (getEffect(getCarta deck1 op) == "reverse" && reversed == True) then do
-        rodarJogo dados (getCarta deck1 op) pilha jogador1 (pickPlay deck1 op) deck2 deck3 deck4 2 False
+        rodarJogo (getCarta deck1 op) pilha jogador1 (pickPlay deck1 op) deck2 deck3 deck4 2 False
   -- SE FOR A CARTA BLOCK, CHAMA O JOGADOR '3'
       else if (getEffect(getCarta deck1 op) == "block") then do
-        rodarJogo dados (getCarta deck1 op) pilha jogador1 (pickPlay deck1 op) deck2 deck3 deck4 3 reversed
+        rodarJogo (getCarta deck1 op) pilha jogador1 (pickPlay deck1 op) deck2 deck3 deck4 3 reversed
   -- SE FOR A CARTA +2
       else if (getEffect(getCarta deck1 op) == "+2") then do
       -- SE TIVER INVERTIDO, TIRA 2 DA PILHA E COLOCA NA MAO DO 4
         if (reversed == True)
-          then do rodarJogo dados (getCarta deck1 op) (tiraDuas pilha) jogador1 (pickPlay deck1 op) deck2 deck3 (deck4++(pegaDuas pilha)) 4 reversed
+          then do rodarJogo (getCarta deck1 op) (tiraDuas pilha) jogador1 (pickPlay deck1 op) deck2 deck3 (deck4++(pegaDuas pilha)) 4 reversed
          -- SE TIVER NORMAL, TIRA 2 DA PILHA E COLOCA NA MAO DO 2
-          else do rodarJogo dados (getCarta deck1 op) (tiraDuas pilha) jogador1 (pickPlay deck1 op) (deck2++(pegaDuas pilha)) deck3 deck4 2 reversed
+          else do rodarJogo (getCarta deck1 op) (tiraDuas pilha) jogador1 (pickPlay deck1 op) (deck2++(pegaDuas pilha)) deck3 deck4 2 reversed
   -- SE FOR CARTA NORMAL E O JOGO TIVER INVERTIDO, CHAMA O JOGADOR 4
       else if (reversed == True)
-        then do rodarJogo dados (getCarta deck1 op) pilha jogador1 (pickPlay deck1 op) deck2 deck3 deck4 4 reversed
+        then do rodarJogo (getCarta deck1 op) pilha jogador1 (pickPlay deck1 op) deck2 deck3 deck4 4 reversed
   -- SE CHEGOU AQUI, ESTA TUDO COMO INICIA, CHAMA COMO ESTA
-      else do rodarJogo dados (getCarta deck1 op) pilha jogador1 (pickPlay deck1 op) deck2 deck3 deck4 2 reversed
+      else do rodarJogo (getCarta deck1 op) pilha jogador1 (pickPlay deck1 op) deck2 deck3 deck4 2 reversed
     else do
        putStrLn "\nTente outra carta!!"
-       rodarJogo dados topo pilha jogador1 deck1 deck2 deck3 deck4 1 reversed
+       rodarJogo topo pilha jogador1 deck1 deck2 deck3 deck4 1 reversed
   else do
     putStrLn "\nVoce nao possui carta valida, pegue uma da pilha pressionando <Enter>"
     getChar
     if (cartaValida (pegaUma pilha) topo)
       then do
          if (reversed == True)
-           then do rodarJogo dados (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 deck4 4 reversed
-         else do rodarJogo dados (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 deck4 2 reversed
+           then do rodarJogo (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 deck4 4 reversed
+         else do rodarJogo (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 deck4 2 reversed
     else do
       if (reversed == True) then do
-        rodarJogo dados topo (tiraUma pilha) jogador1 (deck1 ++ [pegaUma pilha]) deck2 deck3 deck4 4 reversed
-      else do rodarJogo dados (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 deck4 2 reversed
+        rodarJogo topo (tiraUma pilha) jogador1 (deck1 ++ [pegaUma pilha]) deck2 deck3 deck4 4 reversed
+      else do rodarJogo (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 deck4 2 reversed
 
-gerenciaBot1 :: Jogadores -> Carta -> Deck -> Nome -> Deck -> Deck -> Deck -> Deck -> Bool -> IO Jogadores
-gerenciaBot1 dados topo pilha jogador1 deck1 deck2 deck3 deck4 reversed = do
+gerenciaBot1 :: Carta -> Deck -> Nome -> Deck -> Deck -> Deck -> Deck -> Bool -> IO ()
+gerenciaBot1 topo pilha jogador1 deck1 deck2 deck3 deck4 reversed = do
         showCards deck2 0
         opcao <- getLine
         let op = read opcao
@@ -195,40 +138,40 @@ gerenciaBot1 dados topo pilha jogador1 deck1 deck2 deck3 deck4 reversed = do
           if (cartaValida (getCarta deck2 op) topo) then do
              -- SE FOR A CARTA 'REVERSE' E O JOGO TIVER NO CURSO NORMAL, CHAMA O JOGADOR ANTERIOR E REVERSED TRUE
             if (getEffect(getCarta deck2 op) == "reverse" && reversed == False) then do
-              rodarJogo dados (getCarta deck2 op) pilha jogador1 deck1 (pickPlay deck2 op) deck3 deck4 1 True
+              rodarJogo (getCarta deck2 op) pilha jogador1 deck1 (pickPlay deck2 op) deck3 deck4 1 True
         -- SE FOR A CARTA 'REVERSE' E O JOGO TIVER NO CURSO INVERSO, CHAMA O PROXIMO JOGADOR E REVERSED FALSE
             else if (getEffect(getCarta deck2 op) == "reverse" && reversed == True) then do
-              rodarJogo dados (getCarta deck2 op) pilha jogador1 deck1 (pickPlay deck2 op) deck3 deck4 3 False
+              rodarJogo (getCarta deck2 op) pilha jogador1 deck1 (pickPlay deck2 op) deck3 deck4 3 False
         -- SE FOR A CARTA BLOCK, CHAMA O JOGADOR '3'
             else if (getEffect(getCarta deck2 op) == "block") then do
-              rodarJogo dados (getCarta deck2 op) pilha jogador1 deck1 (pickPlay deck2 op) deck3 deck4 1 reversed
+              rodarJogo (getCarta deck2 op) pilha jogador1 deck1 (pickPlay deck2 op) deck3 deck4 1 reversed
         -- SE FOR A CARTA +2
             else if (getEffect(getCarta deck2 op) == "+2") then do
             -- SE TIVER INVERTIDO, TIRA 2 DA PILHA E COLOCA NA MAO DO 4
               if (reversed == True)
-                then do rodarJogo dados (getCarta deck2 op) (tiraDuas pilha) jogador1 (deck1++(pegaDuas pilha)) (pickPlay deck2 op) deck3 deck4 1 reversed
+                then do rodarJogo (getCarta deck2 op) (tiraDuas pilha) jogador1 (deck1++(pegaDuas pilha)) (pickPlay deck2 op) deck3 deck4 1 reversed
                -- SE TIVER NORMAL, TIRA 2 DA PILHA E COLOCA NA MAO DO 2
-                else do rodarJogo dados (getCarta deck2 op) (tiraDuas pilha) jogador1 deck1 (pickPlay deck2 op) (deck3++(pegaDuas pilha)) deck4 3 reversed
+                else do rodarJogo (getCarta deck2 op) (tiraDuas pilha) jogador1 deck1 (pickPlay deck2 op) (deck3++(pegaDuas pilha)) deck4 3 reversed
         -- SE FOR CARTA NORMAL E O JOGO TIVER INVERTIDO, CHAMA O JOGADOR 4
             else if (reversed == True)
-              then do rodarJogo dados (getCarta deck2 op) pilha jogador1 deck1 (pickPlay deck2 op) deck3 deck4 1 reversed
+              then do rodarJogo (getCarta deck2 op) pilha jogador1 deck1 (pickPlay deck2 op) deck3 deck4 1 reversed
         -- SE CHEGOU AQUI, ESTA TUDO COMO INICIA, CHAMA COMO ESTA
-            else do rodarJogo dados (getCarta deck2 op) pilha jogador1 deck1 (pickPlay deck2 op) deck3 deck4 3 reversed
+            else do rodarJogo (getCarta deck2 op) pilha jogador1 deck1 (pickPlay deck2 op) deck3 deck4 3 reversed
           else do
              putStrLn "\nTente outra carta!!"
-             rodarJogo dados topo pilha jogador1 deck1 deck2 deck3 deck4 2 reversed
+             rodarJogo topo pilha jogador1 deck1 deck2 deck3 deck4 2 reversed
         else do
           putStrLn "\nVoce nao possui carta valida, pegue uma da pilha pressionando <Enter>"
           getChar
           if (cartaValida (pegaUma pilha) topo)
             then do
                if (reversed == True)
-                 then do rodarJogo dados (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 deck4 1 reversed
-               else do rodarJogo dados (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 deck4 3 reversed
+                 then do rodarJogo (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 deck4 1 reversed
+               else do rodarJogo (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 deck4 3 reversed
           else do
             if (reversed == True) then do
-              rodarJogo dados topo (tiraUma pilha) jogador1 deck1 (deck2 ++ [pegaUma pilha]) deck3 deck4 1 reversed
-            else do rodarJogo dados topo (tiraUma pilha) jogador1 deck1 (deck2 ++ [pegaUma pilha]) deck3 deck4 3 reversed
+              rodarJogo topo (tiraUma pilha) jogador1 deck1 (deck2 ++ [pegaUma pilha]) deck3 deck4 1 reversed
+            else do rodarJogo topo (tiraUma pilha) jogador1 deck1 (deck2 ++ [pegaUma pilha]) deck3 deck4 3 reversed
 
 
 -- Funcão para mostrar o deck
