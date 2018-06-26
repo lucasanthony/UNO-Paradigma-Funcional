@@ -7,11 +7,11 @@ import JogadorFunctions
 
 type Vez = Int
 
-pilha = [(5,"blue","none"),(-1,"red","+2"),(1,"red","none"),(2,"green","none"),(7,"yellow","none"),(9,"green","none"),(2,"yellow","none"),(1,"red","none"),(8,"green","none")]
-deck1 = [(1,"blue","none"),(-1,"blue","+2"),(1,"red","none"),(2,"green","none"),(1,"yellow","none"),(7,"yellow","reverse")]
-deck2 = [(5,"green","none"),(6,"red","none"),(0,"red","none"),(7,"red","none"),(0,"blue","none"),(0,"red","reverse")]
-deck3 = [(7,"yellow","none"),(3,"yellow","none"),(3,"blue","none"),(5,"red","none"),(1,"green","none"),(10,"green","reverse")]
-deck4 = [(9,"blue","none"),(4,"blue","none"),(1,"green","none"),(8,"yellow","none"),(2,"red","none")]
+pilha = [(5,"AZUL","none"),(-1,"VERMELHA","+2"),(1,"VERMELHA","none"),(2,"VERDE","none"),(7,"AMARELA","none"),(9,"VERDE","none"),(2,"AMARELA","none"),(1,"VERMELHA","none"),(8,"VERDE","none"),(00,"VERDE","block"),(4,"AZUL","none")]
+deck1 = [(1,"AZUL","none"),(-1,"AZUL","+2"),(1,"VERMELHA","none"),(2,"VERDE","none"),(1,"AMARELA","none"),(7,"AMARELA","reverse")]
+deck2 = [(5,"VERDE","none"),(6,"VERMELHA","none"),(0,"VERMELHA","none"),(7,"VERMELHA","none"),(0,"AZUL","none"),(0,"VERMELHA","reverse")]
+deck3 = [(7,"AMARELA","none"),(3,"AMARELA","none"),(3,"AZUL","none"),(5,"VERMELHA","none"),(1,"VERDE","none"),(10,"VERDE","reverse")]
+deck4 = [(9,"AZUL","none"),(4,"AZUL","none"),(1,"VERDE","none"),(8,"AMARELA","none"),(2,"VERMELHA","none")]
 
 getString :: String -> IO String
 getString str = do
@@ -109,20 +109,20 @@ gerenciaPlayer topo pilha jogador1 deck1 deck2 deck3 reversed = do
   else do -- SE NAO TEM CARTA QUE DA MATCH
     putStrLn "\nVoce nao possui carta valida, pegue uma da pilha pressionando <Enter>"
     getChar
-    if (cartaValida (pegaUma pilha) topo) -- SE A CARTA FOR VÁLIDA
-      then do
-         if (reversed == True) -- SE JOGO ESTÁ INVERTIDO
-           then do
-             if (getEffect(pegaUma pilha) == "block")
-               then do msgBlock 1 reversed
-                       rodarJogo (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 2 reversed
+    if (cartaValida (pegaUma pilha) topo) then do
+         putStrLn (showCard (pegaUma pilha) ++ "jogada\n")
+         if (reversed == True) then do
+             if (getEffect(pegaUma pilha) == "block") then do
+               msgBlock 1 reversed
+               rodarJogo (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 2 reversed
              else do rodarJogo (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 3 reversed
          else do
-           if (getEffect(pegaUma pilha) == "block")
-             then do msgBlock 1 reversed
-                     rodarJogo (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 3 reversed
+           if (getEffect(pegaUma pilha) == "block") then do
+             msgBlock 1 reversed
+             rodarJogo (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 3 reversed
            else do rodarJogo (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 2 reversed
     else do
+      putStrLn (showCard (pegaUma pilha) ++ "adicionada em sua mão\n")
       if (reversed == True) then do
         rodarJogo topo (tiraUma pilha) jogador1 (deck1 ++ [pegaUma pilha]) deck2 deck3 3 reversed
       else do rodarJogo topo (tiraUma pilha) jogador1 (deck1 ++ [pegaUma pilha]) deck2 deck3 2 reversed
@@ -159,12 +159,13 @@ gerenciaBot1 topo pilha jogador1 deck1 deck2 deck3 reversed = do
         else do
           putStrLn "\nVoce nao possui carta valida, pegue uma da pilha pressionando <Enter>"
           getChar
-          if (cartaValida (pegaUma pilha) topo)
-            then do
+          if (cartaValida (pegaUma pilha) topo) then do
+               putStrLn (showCard (pegaUma pilha) ++ "jogada\n")
                if (reversed == True)
                  then do rodarJogo (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 1 reversed
                else do rodarJogo (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 3 reversed
           else do
+            putStrLn (showCard (pegaUma pilha) ++ "adicionada em sua mão\n")
             if (reversed == True) then do
               rodarJogo topo (tiraUma pilha) jogador1 deck1 (deck2 ++ [pegaUma pilha]) deck3 1 reversed
             else do rodarJogo topo (tiraUma pilha) jogador1 deck1 (deck2 ++ [pegaUma pilha]) deck3 3 reversed
@@ -182,11 +183,11 @@ gerenciaBot2 topo pilha jogador1 deck1 deck2 deck3 reversed = do
               rodarJogo (getCarta deck3 op) pilha jogador1 deck1 deck2 (pickPlay deck3 op) 1 True
         -- SE FOR A CARTA 'REVERSE' E O JOGO TIVER NO CURSO INVERSO, CHAMA O PROXIMO JOGADOR E REVERSED FALSE
             else if (getEffect(getCarta deck3 op) == "reverse" && reversed == True) then do
-              rodarJogo (getCarta deck2 op) pilha jogador1 deck1 deck2 (pickPlay deck3 op) 2 False
+              rodarJogo (getCarta deck3 op) pilha jogador1 deck1 deck2 (pickPlay deck3 op) 2 False
         -- SE FOR A CARTA BLOCK, CHAMA O JOGADOR '3'
             else if (getEffect(getCarta deck3 op) == "block") then do
               msgBlock 3 reversed
-              rodarJogo (getCarta deck2 op) pilha jogador1 deck1 deck2 (pickPlay deck3 op) 2 reversed
+              rodarJogo (getCarta deck3 op) pilha jogador1 deck1 deck2 (pickPlay deck3 op) 2 reversed
                     -- SE FOR A CARTA +2
             else if (getEffect(getCarta deck3 op) == "+2") then do
                         -- SE TIVER INVERTIDO, TIRA 2 DA PILHA E COLOCA NA MAO DO 4
@@ -205,12 +206,13 @@ gerenciaBot2 topo pilha jogador1 deck1 deck2 deck3 reversed = do
         else do
           putStrLn "\nVoce nao possui carta valida, pegue uma da pilha pressionando <Enter>"
           getChar
-          if (cartaValida (pegaUma pilha) topo)
-            then do
+          if (cartaValida (pegaUma pilha) topo) then do
+               putStrLn (showCard (pegaUma pilha) ++ "jogada\n")
                if (reversed == True)
                  then do rodarJogo (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 2 reversed
                else do rodarJogo (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 1 reversed
           else do
+            putStrLn (showCard (pegaUma pilha) ++ "adicionada em sua mão\n")
             if (reversed == True) then do
               rodarJogo topo (tiraUma pilha) jogador1 deck1 deck2 (deck3 ++ [pegaUma pilha]) 2 reversed
             else do rodarJogo topo (tiraUma pilha) jogador1 deck1 deck2 (deck3 ++ [pegaUma pilha]) 1 reversed
