@@ -34,15 +34,13 @@ menu = do
 executarOpcao :: Char -> IO ()
 executarOpcao '1' = prepararJogo
 executarOpcao '0' = do
-  putStrLn ("\nAte breve \n")
-  menu
+  putStrLn ("\nAté breve \n")
 executarOpcao '2' = do
   showRules
   getChar
   menu
 executarOpcao _ = do
         putStrLn ("\nOpção inválida! Tente novamente...")
-        putStr "\nPressione <Enter> para voltar ao menu..."
         getChar
         menu
 
@@ -82,9 +80,10 @@ gerenciaPlayer topo pilha jogador1 deck1 deck2 deck3 reversed = do
   if (podeJogar deck1 topo) then do -- SE TEM CARTA QUE DA MATCH
     putStrLn ("     Sua vez\n")
     showCards deck1 0
+    putStrLn ("\nEscolha uma carta: ")
     opcao <- getLine
     let op = read opcao
-    if (cartaValida (getCarta deck1 op) topo) then do -- SE A CARTA FOR VÁLIDA
+    if (op >= 0 && op < size deck1 && cartaValida (getCarta deck1 op) topo) then do -- SE A CARTA FOR VÁLIDA
       if (reversed == True) then do -- SE JOGO ESTÁ INVERTIDO
           if (getEffect(getCarta deck1 op) == "reverse") then do -- carta reverse
             rodarJogo (getCarta deck1 op) pilha jogador1 (pickPlay deck1 op) deck2 deck3 2 False
@@ -132,9 +131,10 @@ gerenciaBot1 topo pilha jogador1 deck1 deck2 deck3 reversed = do
         if (podeJogar deck2 topo) then do
           putStrLn ("     Vez de Lula\n")
           showCards deck2 0
+          putStrLn ("\nEscolha uma carta: ")
           opcao <- getLine
           let op = read opcao
-          if (cartaValida (getCarta deck2 op) topo) then do
+          if (op >= 0 && op < size deck2 && cartaValida (getCarta deck2 op) topo) then do
             if (reversed == True) then do
               if (getEffect(getCarta deck2 op) == "reverse") then do
                 rodarJogo (getCarta deck2 op) pilha jogador1 deck1 (pickPlay deck2 op) deck3 3 False
@@ -174,31 +174,24 @@ gerenciaBot2 :: Carta -> Deck -> Nome -> Deck -> Deck -> Deck -> Bool -> IO ()
 gerenciaBot2 topo pilha jogador1 deck1 deck2 deck3 reversed = do
         putStrLn ("     Vez de Dilmãe\n")
         showCards deck3 0
+        putStrLn ("\nEscolha uma carta: ")
         opcao <- getLine
         let op = read opcao
         if (podeJogar deck3 topo) then do
-          if (cartaValida (getCarta deck3 op) topo) then do
-             -- SE FOR A CARTA 'REVERSE' E O JOGO TIVER NO CURSO NORMAL, CHAMA O JOGADOR ANTERIOR E REVERSED TRUE
+          if (op >= 0 && op < size deck3 && cartaValida (getCarta deck3 op) topo) then do
             if (getEffect(getCarta deck3 op) == "reverse" && reversed == False) then do
               rodarJogo (getCarta deck3 op) pilha jogador1 deck1 deck2 (pickPlay deck3 op) 1 True
-        -- SE FOR A CARTA 'REVERSE' E O JOGO TIVER NO CURSO INVERSO, CHAMA O PROXIMO JOGADOR E REVERSED FALSE
             else if (getEffect(getCarta deck3 op) == "reverse" && reversed == True) then do
               rodarJogo (getCarta deck3 op) pilha jogador1 deck1 deck2 (pickPlay deck3 op) 2 False
-        -- SE FOR A CARTA BLOCK, CHAMA O JOGADOR '3'
             else if (getEffect(getCarta deck3 op) == "block") then do
               msgBlock 3 reversed
               rodarJogo (getCarta deck3 op) pilha jogador1 deck1 deck2 (pickPlay deck3 op) 2 reversed
-                    -- SE FOR A CARTA +2
             else if (getEffect(getCarta deck3 op) == "+2") then do
-                        -- SE TIVER INVERTIDO, TIRA 2 DA PILHA E COLOCA NA MAO DO 4
-              if (reversed == True)
-                then do rodarJogo (getCarta deck3 op) (tiraDuas pilha) jogador1 deck1 (deck2++(pegaDuas pilha)) (pickPlay deck3 op) 2 reversed
-                           -- SE TIVER NORMAL, TIRA 2 DA PILHA E COLOCA NA MAO DO 2
-                else do rodarJogo (getCarta deck3 op) (tiraDuas pilha) jogador1 (deck1++(pegaDuas pilha)) deck2 (pickPlay deck3 op) 1 reversed
-                    -- SE FOR CARTA NORMAL E O JOGO TIVER INVERTIDO, CHAMA O JOGADOR 4
-            else if (reversed == True)
-              then do rodarJogo (getCarta deck3 op) pilha jogador1 deck1 deck2 (pickPlay deck3 op) 2 reversed
-                    -- SE CHEGOU AQUI, ESTA TUDO COMO INICIA, CHAMA COMO ESTA
+              if (reversed == True) then do
+                rodarJogo (getCarta deck3 op) (tiraDuas pilha) jogador1 deck1 (deck2++(pegaDuas pilha)) (pickPlay deck3 op) 2 reversed
+              else do rodarJogo (getCarta deck3 op) (tiraDuas pilha) jogador1 (deck1++(pegaDuas pilha)) deck2 (pickPlay deck3 op) 1 reversed
+            else if (reversed == True) then do
+              rodarJogo (getCarta deck3 op) pilha jogador1 deck1 deck2 (pickPlay deck3 op) 2 reversed
             else do rodarJogo (getCarta deck3 op) pilha jogador1 deck1 deck2 (pickPlay deck3 op) 1 reversed
           else do
              putStrLn "\nTente outra carta!!"
@@ -208,8 +201,8 @@ gerenciaBot2 topo pilha jogador1 deck1 deck2 deck3 reversed = do
           getChar
           if (cartaValida (pegaUma pilha) topo) then do
                putStrLn (showCard (pegaUma pilha) ++ "jogada\n")
-               if (reversed == True)
-                 then do rodarJogo (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 2 reversed
+               if (reversed == True) then do
+                 rodarJogo (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 2 reversed
                else do rodarJogo (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 1 reversed
           else do
             putStrLn (showCard (pegaUma pilha) ++ "adicionada em sua mão\n")
