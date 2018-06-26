@@ -60,7 +60,7 @@ novoJogo jogador1 deck1 deck2 deck3 = do
 
 rodarJogo :: Carta -> Deck -> Nome -> Deck -> Deck -> Deck -> Vez -> Bool -> IO ()
 rodarJogo topo pilha jogador1 deck1 deck2 deck3 vez reversed = do
- cleanScreen
+ putStr ("--------------------------------------------------------------------\n")
  if (venceu deck1) then do
      putStrLn ("Você venceu, parabéns!!")
  else if (venceu deck2) then do
