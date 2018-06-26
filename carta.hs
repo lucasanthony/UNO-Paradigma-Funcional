@@ -24,6 +24,10 @@ showTopo s = do
 
 -- Verifica se a carta escolhida é válida
 cartaValida :: Carta -> Carta -> Bool
-cartaValida carta topo | getColor topo == getColor carta || getColor topo == "first card" || getNumber topo == getNumber carta || ((getEffect topo == getEffect carta) && (getEffect carta /= "none")) = True 
+cartaValida carta topo | getColor topo == getColor carta || getColor topo == "first card" || getNumber topo == getNumber carta || ((getEffect topo == getEffect carta) && (getEffect carta /= "none")) = True
                        | otherwise = False
 
+msgBlock :: Int -> Bool -> IO()
+msgBlock vez reversed | (vez == 1 || vez == 3) && reversed == True = putStrLn ("Dilmãe passa a vez!!")
+                      | (vez == 1 || vez == 2) && reversed == False = putStrLn ("Lula passa a vez!!")
+                      | otherwise = putStrLn ("Você passa a vez!!")
