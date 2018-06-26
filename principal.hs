@@ -86,11 +86,11 @@ rodarJogo topo pilha jogador1 deck1 deck2 deck3 vez reversed = do
 
 gerenciaPlayer :: Carta -> Deck -> Nome -> Deck -> Deck -> Deck -> Bool -> IO ()
 gerenciaPlayer topo pilha jogador1 deck1 deck2 deck3 reversed = do
-  putStrLn ("     Sua vez\n")
-  showCards deck1 0
-  opcao <- getLine
-  let op = read opcao
   if (podeJogar deck1 topo) then do -- SE TEM CARTA QUE DA MATCH
+    putStrLn ("     Sua vez\n")
+    showCards deck1 0
+    opcao <- getLine
+    let op = read opcao
     if (cartaValida (getCarta deck1 op) topo) then do -- SE A CARTA FOR VÁLIDA
       if (reversed == True) then do -- SE JOGO ESTÁ INVERTIDO
           if (getEffect(getCarta deck1 op) == "reverse") then do -- carta reverse
@@ -100,23 +100,23 @@ gerenciaPlayer topo pilha jogador1 deck1 deck2 deck3 reversed = do
           else if (getEffect(getCarta deck1 op) == "+2") then do -- carta +2
             rodarJogo (getCarta deck1 op) (tiraDuas pilha) jogador1 (pickPlay deck1 op) deck2 (deck3++(pegaDuas pilha)) 3 reversed
           else do rodarJogo (getCarta deck1 op) pilha jogador1 (pickPlay deck1 op) deck2 deck3 3 reversed -- carta simples
-      else if (reversed == False) then do -- SE JOGO NÃO ESTÁ INVERTIDO
+      else do -- SE JOGO NÃO ESTÁ INVERTIDO
           if (getEffect(getCarta deck1 op) == "reverse") then do
             rodarJogo (getCarta deck1 op) pilha jogador1 (pickPlay deck1 op) deck2 deck3 3 True
-          else if (getEffect(getCarta deck1 op) == "block") then do
+          else if (getEffect(getCarta deck1 op) == "block") then do -- carta block
             rodarJogo (getCarta deck1 op) pilha jogador1 (pickPlay deck1 op) deck2 deck3 3 reversed
-          else if (getEffect(getCarta deck1 op) == "+2") then do
-            rodarJogo (getCarta deck1 op) (tiraDuas pilha) jogador1 (pickPlay deck1 op) deck2 (deck3++(pegaDuas pilha)) 2 reversed
-          else do rodarJogo (getCarta deck1 op) pilha jogador1 (pickPlay deck1 op) deck2 deck3 2 reversed
+          else if (getEffect(getCarta deck1 op) == "+2") then do -- carta +2
+            rodarJogo (getCarta deck1 op) (tiraDuas pilha) jogador1 (pickPlay deck1 op) (deck2++(pegaDuas pilha)) deck3 2 reversed
+          else do rodarJogo (getCarta deck1 op) pilha jogador1 (pickPlay deck1 op) deck2 deck3 2 reversed -- carta simples
     else do
-      putStrLn ("\nTente outra carta!!")
+      putStrLn ("Carta inválida, tente outra carta!!\n")
       rodarJogo topo pilha jogador1 deck1 deck2 deck3 1 reversed
   else do -- SE NAO TEM CARTA QUE DA MATCH
     putStrLn "\nVoce nao possui carta valida, pegue uma da pilha pressionando <Enter>"
     getChar
-    if (cartaValida (pegaUma pilha) topo)
+    if (cartaValida (pegaUma pilha) topo) -- SE A CARTA FOR VÁLIDA
       then do
-         if (reversed == True)
+         if (reversed == True) -- SE JOGO ESTÁ INVERTIDO
            then do
              if (getEffect(pegaUma pilha) == "block")
                then do rodarJogo (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 2 reversed
@@ -132,33 +132,28 @@ gerenciaPlayer topo pilha jogador1 deck1 deck2 deck3 reversed = do
 
 gerenciaBot1 :: Carta -> Deck -> Nome -> Deck -> Deck -> Deck -> Bool -> IO ()
 gerenciaBot1 topo pilha jogador1 deck1 deck2 deck3 reversed = do
-        putStrLn ("     Vez de Lula\n")
-        showCards deck2 0
-        opcao <- getLine
-        let op = read opcao
         if (podeJogar deck2 topo) then do
+          putStrLn ("     Vez de Lula\n")
+          showCards deck2 0
+          opcao <- getLine
+          let op = read opcao
           if (cartaValida (getCarta deck2 op) topo) then do
-             -- SE FOR A CARTA 'REVERSE' E O JOGO TIVER NO CURSO NORMAL, CHAMA O JOGADOR ANTERIOR E REVERSED TRUE
-            if (getEffect(getCarta deck2 op) == "reverse" && reversed == False) then do
-              rodarJogo (getCarta deck2 op) pilha jogador1 deck1 (pickPlay deck2 op) deck3 1 True
-        -- SE FOR A CARTA 'REVERSE' E O JOGO TIVER NO CURSO INVERSO, CHAMA O PROXIMO JOGADOR E REVERSED FALSE
-            else if (getEffect(getCarta deck2 op) == "reverse" && reversed == True) then do
-              rodarJogo (getCarta deck2 op) pilha jogador1 deck1 (pickPlay deck2 op) deck3 3 False
-        -- SE FOR A CARTA BLOCK, CHAMA O JOGADOR '3'
-            else if (getEffect(getCarta deck2 op) == "block") then do
-              rodarJogo (getCarta deck2 op) pilha jogador1 deck1 (pickPlay deck2 op) deck3 1 reversed
-        -- SE FOR A CARTA +2
-            else if (getEffect(getCarta deck2 op) == "+2") then do
-            -- SE TIVER INVERTIDO, TIRA 2 DA PILHA E COLOCA NA MAO DO 4
-              if (reversed == True)
-                then do rodarJogo (getCarta deck2 op) (tiraDuas pilha) jogador1 (deck1++(pegaDuas pilha)) (pickPlay deck2 op) deck3 1 reversed
-               -- SE TIVER NORMAL, TIRA 2 DA PILHA E COLOCA NA MAO DO 2
-                else do rodarJogo (getCarta deck2 op) (tiraDuas pilha) jogador1 deck1 (pickPlay deck2 op) (deck3++(pegaDuas pilha)) 3 reversed
-        -- SE FOR CARTA NORMAL E O JOGO TIVER INVERTIDO, CHAMA O JOGADOR 4
-            else if (reversed == True)
-              then do rodarJogo (getCarta deck2 op) pilha jogador1 deck1 (pickPlay deck2 op) deck3 1 reversed
-        -- SE CHEGOU AQUI, ESTA TUDO COMO INICIA, CHAMA COMO ESTA
-            else do rodarJogo (getCarta deck2 op) pilha jogador1 deck1 (pickPlay deck2 op) deck3 3 reversed
+            if (reversed == True) then do
+              if (getEffect(getCarta deck2 op) == "reverse") then do
+                rodarJogo (getCarta deck2 op) pilha jogador1 deck1 (pickPlay deck2 op) deck3 3 False
+              else if (getEffect(getCarta deck2 op) == "block") then do
+                rodarJogo (getCarta deck2 op) pilha jogador1 deck1 (pickPlay deck2 op) deck3 3 reversed
+              else if (getEffect(getCarta deck2 op) == "+2") then do
+                rodarJogo (getCarta deck2 op) (tiraDuas pilha) jogador1 (deck1++(pegaDuas pilha)) (pickPlay deck2 op) deck3 1 reversed
+              else do rodarJogo (getCarta deck2 op) pilha jogador1 deck1 (pickPlay deck2 op) deck3 1 reversed
+            else do
+              if (getEffect(getCarta deck2 op) == "reverse") then do
+                rodarJogo (getCarta deck2 op) pilha jogador1 deck1 (pickPlay deck2 op) deck3 1 True
+              else if (getEffect(getCarta deck2 op) == "block") then do
+                rodarJogo (getCarta deck2 op) pilha jogador1 deck1 (pickPlay deck2 op) deck3 1 reversed
+              else if (getEffect(getCarta deck2 op) == "+2") then do
+                rodarJogo (getCarta deck2 op) (tiraDuas pilha) jogador1 deck1 (pickPlay deck2 op) (deck3++(pegaDuas pilha)) 3 reversed
+              else do rodarJogo (getCarta deck2 op) pilha jogador1 deck1 (pickPlay deck2 op) deck3 3 reversed
           else do
              putStrLn "\nTente outra carta!!"
              rodarJogo topo pilha jogador1 deck1 deck2 deck3 2 reversed
