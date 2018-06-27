@@ -4,6 +4,7 @@ import System.Process
 import DeckFunctions
 import CartaFunctions
 import JogadorFunctions
+import Util
 
 type Vez = Int
 
@@ -86,18 +87,18 @@ gerenciaPlayer topo pilha jogador1 deck1 deck2 deck3 reversed = do
     let op = read opcao
     if (op >= 0 && op < size deck1 && cartaValida (getCarta deck1 op) topo) then do -- SE A CARTA FOR VÁLIDA
       if (reversed == True) then do -- SE JOGO ESTÁ INVERTIDO
-          if (getEffect(getCarta deck1 op) == "reverse") then do -- carta reverse
+          if (getEffect(getCarta deck1 op) == "REVERSE") then do -- carta reverse
             rodarJogo (getCarta deck1 op) pilha jogador1 (pickPlay deck1 op) deck2 deck3 2 False
-          else if (getEffect(getCarta deck1 op) == "block") then do -- carta block
+          else if (getEffect(getCarta deck1 op) == "BLOCK") then do -- carta block
             msgBlock 1 reversed
             rodarJogo (getCarta deck1 op) pilha jogador1 (pickPlay deck1 op) deck2 deck3 2 reversed
           else if (getEffect(getCarta deck1 op) == "+2") then do -- carta +2
             rodarJogo (getCarta deck1 op) (tiraDuas pilha) jogador1 (pickPlay deck1 op) deck2 (deck3++(pegaDuas pilha)) 3 reversed
           else do rodarJogo (getCarta deck1 op) pilha jogador1 (pickPlay deck1 op) deck2 deck3 3 reversed -- carta simples
       else do -- SE JOGO NÃO ESTÁ INVERTIDO
-          if (getEffect(getCarta deck1 op) == "reverse") then do
+          if (getEffect(getCarta deck1 op) == "REVERSE") then do
             rodarJogo (getCarta deck1 op) pilha jogador1 (pickPlay deck1 op) deck2 deck3 3 True
-          else if (getEffect(getCarta deck1 op) == "block") then do -- carta block
+          else if (getEffect(getCarta deck1 op) == "BLOCK") then do -- carta block
             msgBlock 1 reversed
             rodarJogo (getCarta deck1 op) pilha jogador1 (pickPlay deck1 op) deck2 deck3 3 reversed
           else if (getEffect(getCarta deck1 op) == "+2") then do -- carta +2
@@ -112,20 +113,20 @@ gerenciaPlayer topo pilha jogador1 deck1 deck2 deck3 reversed = do
     if (cartaValida (pegaUma pilha) topo) then do
          putStrLn (showCard (pegaUma pilha) ++ "jogada\n")
          if (reversed == True) then do
-             if (getEffect(pegaUma pilha) == "block") then do
+             if (getEffect(pegaUma pilha) == "BLOCK") then do
                msgBlock 1 reversed
                rodarJogo (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 2 reversed
-             else if (getEffect(pegaUma pilha) == "reverse") then do
+             else if (getEffect(pegaUma pilha) == "REVERSE") then do
                rodarJogo (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 2 False
              else if (getEffect(pegaUma pilha) == "+2") then do
                let pilla = tiraUma pilha
                rodarJogo (pegaUma pilha) (tiraDuas pilla) jogador1 deck1 deck2 (deck3++(pegaDuas pilla)) 3 reversed
              else do rodarJogo (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 3 reversed
          else do
-           if (getEffect(pegaUma pilha) == "block") then do
+           if (getEffect(pegaUma pilha) == "BLOCK") then do
              msgBlock 1 reversed
              rodarJogo (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 3 reversed
-           else if (getEffect(pegaUma pilha) == "reverse") then do
+           else if (getEffect(pegaUma pilha) == "REVERSE") then do
              rodarJogo (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 3 True
            else if (getEffect(pegaUma pilha) == "+2") then do
              let pilla = tiraUma pilha
@@ -147,18 +148,18 @@ gerenciaBot1 topo pilha jogador1 deck1 deck2 deck3 reversed = do
           let op = read opcao
           if (op >= 0 && op < size deck2 && cartaValida (getCarta deck2 op) topo) then do
             if (reversed == True) then do
-              if (getEffect(getCarta deck2 op) == "reverse") then do
+              if (getEffect(getCarta deck2 op) == "REVERSE") then do
                 rodarJogo (getCarta deck2 op) pilha jogador1 deck1 (pickPlay deck2 op) deck3 3 False
-              else if (getEffect(getCarta deck2 op) == "block") then do
+              else if (getEffect(getCarta deck2 op) == "BLOCK") then do
                 msgBlock 2 reversed
                 rodarJogo (getCarta deck2 op) pilha jogador1 deck1 (pickPlay deck2 op) deck3 3 reversed
               else if (getEffect(getCarta deck2 op) == "+2") then do
                 rodarJogo (getCarta deck2 op) (tiraDuas pilha) jogador1 (deck1++(pegaDuas pilha)) (pickPlay deck2 op) deck3 1 reversed
               else do rodarJogo (getCarta deck2 op) pilha jogador1 deck1 (pickPlay deck2 op) deck3 1 reversed
             else do
-              if (getEffect(getCarta deck2 op) == "reverse") then do
+              if (getEffect(getCarta deck2 op) == "REVERSE") then do
                 rodarJogo (getCarta deck2 op) pilha jogador1 deck1 (pickPlay deck2 op) deck3 1 True
-              else if (getEffect(getCarta deck2 op) == "block") then do
+              else if (getEffect(getCarta deck2 op) == "BLOCK") then do
                 msgBlock 2 reversed
                 rodarJogo (getCarta deck2 op) pilha jogador1 deck1 (pickPlay deck2 op) deck3 1 reversed
               else if (getEffect(getCarta deck2 op) == "+2") then do
@@ -190,11 +191,11 @@ gerenciaBot2 topo pilha jogador1 deck1 deck2 deck3 reversed = do
         let op = read opcao
         if (podeJogar deck3 topo) then do
           if (op >= 0 && op < size deck3 && cartaValida (getCarta deck3 op) topo) then do
-            if (getEffect(getCarta deck3 op) == "reverse" && reversed == False) then do
+            if (getEffect(getCarta deck3 op) == "REVERSE" && reversed == False) then do
               rodarJogo (getCarta deck3 op) pilha jogador1 deck1 deck2 (pickPlay deck3 op) 2 True
-            else if (getEffect(getCarta deck3 op) == "reverse" && reversed == True) then do
+            else if (getEffect(getCarta deck3 op) == "REVERSE" && reversed == True) then do
               rodarJogo (getCarta deck3 op) pilha jogador1 deck1 deck2 (pickPlay deck3 op) 1 False
-            else if (getEffect(getCarta deck3 op) == "block") then do
+            else if (getEffect(getCarta deck3 op) == "BLOCK") then do
               msgBlock 3 reversed
               rodarJogo (getCarta deck3 op) pilha jogador1 deck1 deck2 (pickPlay deck3 op) 2 reversed
             else if (getEffect(getCarta deck3 op) == "+2") then do
@@ -220,28 +221,3 @@ gerenciaBot2 topo pilha jogador1 deck1 deck2 deck3 reversed = do
             if (reversed == True) then do
               rodarJogo topo (tiraUma pilha) jogador1 deck1 deck2 (deck3 ++ [pegaUma pilha]) 2 reversed
             else do rodarJogo topo (tiraUma pilha) jogador1 deck1 deck2 (deck3 ++ [pegaUma pilha]) 1 reversed
-
-showLines :: [String] -> IO()
-showLines [] = return()
-showLines s = do
-  putStrLn (head s)
-  showLines (tail s)
-
--- Exibe a tela principal do game
-tela_principal :: IO()
-tela_principal = do
-    cont <- readFile ".msg"
-    showLines(take 37 (lines cont))
-
-showRules :: IO()
-showRules = do
-    cont <- readFile "regras.msg"
-    showLines(take 18 (lines cont))
-
-main :: IO()
-main = do
-    tela_principal
-
--- Limpa a tela
-cleanScreen :: IO()
-cleanScreen = putStr "\ESC[1J"
