@@ -78,7 +78,8 @@ rodarJogo topo pilha jogador1 deck1 deck2 deck3 vez reversed = do
 gerenciaPlayer :: Carta -> Deck -> Nome -> Deck -> Deck -> Deck -> Bool -> IO ()
 gerenciaPlayer topo pilha jogador1 deck1 deck2 deck3 reversed = do
   if (podeJogar deck1 topo) then do -- SE TEM CARTA QUE DA MATCH
-    putStrLn ("     Sua vez\n")
+    putStrLn ("  Sua vez - " ++ (statusRodada reversed))
+    status deck2 deck3
     showCards deck1 0
     putStrLn ("\nEscolha uma carta: ")
     opcao <- getLine
