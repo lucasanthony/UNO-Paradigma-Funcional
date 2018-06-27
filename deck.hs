@@ -63,11 +63,13 @@ getCarta ((n,cor,efeito):xs) x | x == 0 = (n,cor,efeito)
                                | otherwise = getCarta xs (x-1)
 
 -- Mostra as cartas do jogador
-showCards :: Deck -> Int -> IO()
-showCards [] _ = return()
-showCards s n = do
- putStrLn ((show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ " Efeito: " ++ getEffect(head s))
- showCards (tail s) (n+1)
+showCards :: Deck -> Carta -> Int -> IO()
+showCards [] _ _ = return()
+showCards s topo n = do
+  if (cartaValida (head s) topo) then do
+    putStrLn ("> " ++ (show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ " Efeito: " ++ getEffect(head s))
+  else do putStrLn ("  " ++ (show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ " Efeito: " ++ getEffect(head s))
+  showCards (tail s) topo (n+1)
 
 -- Função que verifica se o player venceu a partida,
 -- verificação feita pelo deck do mesmo

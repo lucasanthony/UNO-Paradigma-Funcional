@@ -80,7 +80,7 @@ gerenciaPlayer topo pilha jogador1 deck1 deck2 deck3 reversed = do
   if (podeJogar deck1 topo) then do -- SE TEM CARTA QUE DA MATCH
     putStrLn ("  Sua vez - " ++ (statusRodada reversed))
     status deck2 deck3
-    showCards deck1 0
+    showCards deck1 topo 0
     putStrLn ("\nEscolha uma carta: ")
     opcao <- getLine
     let op = read opcao
@@ -141,7 +141,7 @@ gerenciaBot1 :: Carta -> Deck -> Nome -> Deck -> Deck -> Deck -> Bool -> IO ()
 gerenciaBot1 topo pilha jogador1 deck1 deck2 deck3 reversed = do
         if (podeJogar deck2 topo) then do
           putStrLn ("     Vez de Lula\n")
-          showCards deck2 0
+          showCards deck2 topo 0
           putStrLn ("\nEscolha uma carta: ")
           opcao <- getLine
           let op = read opcao
@@ -184,7 +184,7 @@ gerenciaBot1 topo pilha jogador1 deck1 deck2 deck3 reversed = do
 gerenciaBot2 :: Carta -> Deck -> Nome -> Deck -> Deck -> Deck -> Bool -> IO ()
 gerenciaBot2 topo pilha jogador1 deck1 deck2 deck3 reversed = do
         putStrLn ("     Vez de Dilmãe\n")
-        showCards deck3 0
+        showCards deck3 topo 0
         putStrLn ("\nEscolha uma carta: ")
         opcao <- getLine
         let op = read opcao
