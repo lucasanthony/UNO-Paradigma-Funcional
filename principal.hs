@@ -115,7 +115,7 @@ gerenciaPlayer topo pilha jogador1 deck1 deck2 deck3 reversed = do
                msgBlock 1 reversed
                rodarJogo (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 2 reversed
              else if (getEffect(pegaUma pilha) == "reverse") then do
-               rodarJogo (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 3 False
+               rodarJogo (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 2 False
              else if (getEffect(pegaUma pilha) == "+2") then do
                let pilla = tiraUma pilha
                rodarJogo (pegaUma pilha) (tiraDuas pilla) jogador1 deck1 deck2 (deck3++(pegaDuas pilla)) 3 reversed
@@ -124,6 +124,11 @@ gerenciaPlayer topo pilha jogador1 deck1 deck2 deck3 reversed = do
            if (getEffect(pegaUma pilha) == "block") then do
              msgBlock 1 reversed
              rodarJogo (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 3 reversed
+           else if (getEffect(pegaUma pilha) == "reverse") then do
+             rodarJogo (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 3 True
+           else if (getEffect(pegaUma pilha) == "+2") then do
+             let pilla = tiraUma pilha
+             rodarJogo (pegaUma pilha) (tiraDuas pilla) jogador1 deck1 (deck2++(pegaDuas pilla)) deck3 2 reversed
            else do rodarJogo (pegaUma pilha) (tiraUma pilha) jogador1 deck1 deck2 deck3 2 reversed
     else do
       putStrLn (showCard (pegaUma pilha) ++ "adicionada em sua mão\n")
