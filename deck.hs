@@ -67,8 +67,21 @@ showCards :: Deck -> Carta -> Int -> IO()
 showCards [] _ _ = return()
 showCards s topo n = do
   if (cartaValida (head s) topo) then do
-    putStrLn ("> " ++ (show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ " Efeito: " ++ getEffect(head s))
-  else do putStrLn ("  " ++ (show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ " Efeito: " ++ getEffect(head s))
+    if (getColor (head s) == "VERDE") then do
+      putStrLn ("> " ++ (show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ "    Efeito: " ++ getEffect(head s))
+    else if (getColor (head s) == "AZUL") then do
+      putStrLn ("> " ++ (show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ "     Efeito: " ++ getEffect(head s))
+    else if (getColor (head s) == "AMARELA") then do
+      putStrLn ("> " ++ (show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ "  Efeito: " ++ getEffect(head s))
+    else do putStrLn ("> " ++ (show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ " Efeito: " ++ getEffect(head s))
+  else do
+    if (getColor (head s) == "VERDE") then do
+      putStrLn ((show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ "    Efeito: " ++ getEffect(head s))
+    else if (getColor (head s) == "AZUL") then do
+      putStrLn ((show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ "     Efeito: " ++ getEffect(head s))
+    else if (getColor (head s) == "AMARELA") then do
+      putStrLn ((show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ "  Efeito: " ++ getEffect(head s))
+    else do putStrLn ((show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ " Efeito: " ++ getEffect(head s))
   showCards (tail s) topo (n+1)
 
 -- Função que verifica se o player venceu a partida,
