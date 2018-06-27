@@ -15,8 +15,8 @@ obterNome :: Jogador -> Nome
 obterNome (Jogador nome _ _) = nome
 
 -- Mostra ao jogador o próximo bot a jogar
-statusRodada :: Bool -> String
-statusRodada reversed | reversed == True = "Próximo a jogar: Dilmãe\n"
+next :: Bool -> String
+next reversed | reversed == True = "Próximo a jogar: Dilmãe\n"
                       | otherwise = "Próximo a jogar: Lula\n"
 
 -- Mostra ao jogador quantas cartas cada bot tem na mão

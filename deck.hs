@@ -62,7 +62,8 @@ getCarta :: Deck -> Int -> Carta
 getCarta ((n,cor,efeito):xs) x | x == 0 = (n,cor,efeito)
                                | otherwise = getCarta xs (x-1)
 
--- Mostra as cartas do jogador
+-- Mostra as cartas do jogador, as cartas que podem ser jogadas
+-- são indicadas com " >"
 showCards :: Deck -> Carta -> Int -> IO()
 showCards [] _ _ = return()
 showCards s topo n = do
@@ -76,12 +77,12 @@ showCards s topo n = do
     else do putStrLn ("> " ++ (show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ " Efeito: " ++ getEffect(head s))
   else do
     if (getColor (head s) == "VERDE") then do
-      putStrLn ((show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ "    Efeito: " ++ getEffect(head s))
+      putStrLn ("  " ++ (show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ "    Efeito: " ++ getEffect(head s))
     else if (getColor (head s) == "AZUL") then do
-      putStrLn ((show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ "     Efeito: " ++ getEffect(head s))
+      putStrLn ("  " ++ (show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ "     Efeito: " ++ getEffect(head s))
     else if (getColor (head s) == "AMARELA") then do
-      putStrLn ((show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ "  Efeito: " ++ getEffect(head s))
-    else do putStrLn ((show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ " Efeito: " ++ getEffect(head s))
+      putStrLn ("  " ++ (show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ "  Efeito: " ++ getEffect(head s))
+    else do putStrLn ("  " ++ (show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ " Efeito: " ++ getEffect(head s))
   showCards (tail s) topo (n+1)
 
 -- Função que verifica se o player venceu a partida,

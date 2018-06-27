@@ -27,7 +27,7 @@ showCard s = ("A carta : " ++ "Numero: " ++ show(getNumber s) ++ " Cor: " ++ get
 
 -- Verifica se a carta escolhida é válida
 cartaValida :: Carta -> Carta -> Bool
-cartaValida carta topo | getColor topo == getColor carta || getColor topo == "first card" || getNumber topo == getNumber carta || ((getEffect topo == getEffect carta) && (getEffect carta /= "none")) = True
+cartaValida carta topo | getColor topo == getColor carta || getColor topo == "first card" || getNumber topo == getNumber carta || ((getEffect topo == getEffect carta) && (getEffect carta /= " ")) = True
                        | otherwise = False
 
 msgBlock :: Int -> Bool -> IO()

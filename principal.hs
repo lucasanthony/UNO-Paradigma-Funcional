@@ -7,11 +7,11 @@ import JogadorFunctions
 
 type Vez = Int
 
-pilha = [(5,"AZUL","none"),(-1,"VERMELHA","+2"),(1,"VERMELHA","none"),(2,"VERDE","none"),(7,"AMARELA","none"),(9,"VERDE","none"),(2,"AMARELA","none"),(1,"VERMELHA","none"),(8,"VERDE","none"),(00,"VERDE","block"),(4,"AZUL","none")]
-deck1 = [(1,"AZUL","none"),(-1,"AZUL","+2"),(1,"VERMELHA","none"),(2,"VERDE","none"),(1,"AMARELA","none"),(7,"AMARELA","reverse")]
-deck2 = [(5,"VERDE","none"),(6,"VERMELHA","none"),(0,"VERMELHA","none"),(7,"VERMELHA","none"),(0,"AZUL","none"),(0,"VERMELHA","reverse")]
-deck3 = [(7,"AMARELA","none"),(3,"AMARELA","none"),(3,"AZUL","none"),(5,"VERMELHA","none"),(1,"VERDE","none"),(10,"VERDE","reverse")]
-deck4 = [(9,"AZUL","none"),(4,"AZUL","none"),(1,"VERDE","none"),(8,"AMARELA","none"),(2,"VERMELHA","none")]
+pilha = [(5,"AZUL"," "),(-1,"VERMELHA","+2"),(1,"VERMELHA"," "),(2,"VERDE"," "),(7,"AMARELA"," "),(9,"VERDE"," "),(2,"AMARELA"," "),(1,"VERMELHA"," "),(8,"VERDE"," "),(00,"VERDE","BLOCK"),(4,"AZUL"," ")]
+deck1 = [(1,"AZUL"," "),(-1,"AZUL","+2"),(1,"VERMELHA"," "),(2,"VERDE"," "),(1,"AMARELA"," "),(7,"AMARELA","REVERSE")]
+deck2 = [(5,"VERDE"," "),(6,"VERMELHA"," "),(0,"VERMELHA"," "),(7,"VERMELHA"," "),(0,"AZUL"," "),(0,"VERMELHA","REVERSE")]
+deck3 = [(7,"AMARELA"," "),(3,"AMARELA"," "),(3,"AZUL"," "),(5,"VERMELHA"," "),(1,"VERDE"," "),(10,"VERDE","REVERSE")]
+deck4 = [(9,"AZUL"," "),(4,"AZUL"," "),(1,"VERDE"," "),(8,"AMARELA"," "),(2,"VERMELHA"," ")]
 
 getString :: String -> IO String
 getString str = do
@@ -78,7 +78,7 @@ rodarJogo topo pilha jogador1 deck1 deck2 deck3 vez reversed = do
 gerenciaPlayer :: Carta -> Deck -> Nome -> Deck -> Deck -> Deck -> Bool -> IO ()
 gerenciaPlayer topo pilha jogador1 deck1 deck2 deck3 reversed = do
   if (podeJogar deck1 topo) then do -- SE TEM CARTA QUE DA MATCH
-    putStrLn ("  Sua vez - " ++ (statusRodada reversed))
+    putStrLn ("  Sua vez - " ++ (next reversed))
     status deck2 deck3
     showCards deck1 topo 0
     putStrLn ("\nEscolha uma carta: ")
