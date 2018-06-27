@@ -190,9 +190,9 @@ gerenciaBot2 topo pilha jogador1 deck1 deck2 deck3 reversed = do
         if (podeJogar deck3 topo) then do
           if (op >= 0 && op < size deck3 && cartaValida (getCarta deck3 op) topo) then do
             if (getEffect(getCarta deck3 op) == "reverse" && reversed == False) then do
-              rodarJogo (getCarta deck3 op) pilha jogador1 deck1 deck2 (pickPlay deck3 op) 1 True
+              rodarJogo (getCarta deck3 op) pilha jogador1 deck1 deck2 (pickPlay deck3 op) 2 True
             else if (getEffect(getCarta deck3 op) == "reverse" && reversed == True) then do
-              rodarJogo (getCarta deck3 op) pilha jogador1 deck1 deck2 (pickPlay deck3 op) 2 False
+              rodarJogo (getCarta deck3 op) pilha jogador1 deck1 deck2 (pickPlay deck3 op) 1 False
             else if (getEffect(getCarta deck3 op) == "block") then do
               msgBlock 3 reversed
               rodarJogo (getCarta deck3 op) pilha jogador1 deck1 deck2 (pickPlay deck3 op) 2 reversed
