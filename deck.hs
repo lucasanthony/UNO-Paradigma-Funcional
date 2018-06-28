@@ -12,7 +12,7 @@ size (x:xs) = 1 + size xs
 -- VERIFICA SE O JOGADOR TEM ALGUMA CARTA Q DA MATCH COM A DO TOPO
 podeJogar :: Deck -> Carta -> Bool
 podeJogar [] _ = False
-podeJogar (x:xs) (n,c,e) | getColor x == c || getNumber x == n || (getEffect x == e && e /= "none") || c == "first card" = True
+podeJogar (x:xs) (n,c,e) | getColor x == c || getNumber x == n || (getEffect x == e && e /= " ") || c == "first card" = True
                          | otherwise = podeJogar xs (n,c,e)
 
 --Funcao que retorna 1 carta do deck principal que irao pra mao do player
@@ -62,6 +62,7 @@ pickPlay (x:xs) n | n == 0 = pickPlay xs (n+1)
 
 -- Retorna uma carta específica do deck passado como parâmetro
 getCarta :: Deck -> Int -> Carta
+getCarta [] x = (0,"  ","  ")
 getCarta ((n,cor,efeito):xs) x | x == 0 = (n,cor,efeito)
                                | otherwise = getCarta xs (x-1)
 
@@ -116,6 +117,7 @@ specialCards deck retorno topo pos = do
     specialCards (tail deck) retorno topo (pos+1)
 
 firstCardValid :: Deck -> Carta -> Int -> Int
+firstCardValid [] _ pos = pos
 firstCardValid (x:xs) topo pos | cartaValida x topo == True = pos
                                | otherwise = firstCardValid xs topo (pos+1)
 

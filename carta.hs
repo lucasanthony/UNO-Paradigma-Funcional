@@ -31,8 +31,10 @@ cartaValida carta topo | getColor topo == getColor carta || getColor topo == "fi
                        | otherwise = False
 
 msgBlock :: Int -> Bool -> IO()
-msgBlock vez reversed | (vez == 1 || vez == 3) && reversed == True = putStrLn ("Dilmãe passa a vez!!")
-                      | (vez == 1 || vez == 2) && reversed == False = putStrLn ("Lula passa a vez!!")
+msgBlock vez reversed | vez == 1 && reversed == True = putStrLn ("Dilmãe passa a vez!!")
+                      | vez == 3 && reversed == True = putStrLn ("Lula passa a vez!!")
+                      | vez == 1 && reversed == False = putStrLn ("Lula passa a vez!!")
+                      | vez == 2 && reversed == False = putStrLn ("Dilmãe passa a vez!!")
                       | otherwise = putStrLn ("Você passa a vez!!")
 
 isSpecialCard :: Carta -> Bool
