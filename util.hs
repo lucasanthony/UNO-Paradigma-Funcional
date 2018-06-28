@@ -17,10 +17,6 @@ showRules = do
     cont <- readFile "regras.msg"
     showLines(take 18 (lines cont))
 
-main :: IO()
-main = do
-    tela_principal
-
 -- Limpa a tela
 cleanScreen :: IO()
 cleanScreen = putStr "\ESC[1J"

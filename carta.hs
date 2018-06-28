@@ -34,3 +34,7 @@ msgBlock :: Int -> Bool -> IO()
 msgBlock vez reversed | (vez == 1 || vez == 3) && reversed == True = putStrLn ("Dilmãe passa a vez!!")
                       | (vez == 1 || vez == 2) && reversed == False = putStrLn ("Lula passa a vez!!")
                       | otherwise = putStrLn ("Você passa a vez!!")
+
+isSpecialCard :: Carta -> Bool
+isSpecialCard (_,_,effect) | effect == " " = False
+                           | otherwise = True

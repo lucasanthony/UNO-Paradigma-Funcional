@@ -15,10 +15,13 @@ podeJogar [] _ = False
 podeJogar (x:xs) (n,c,e) | getColor x == c || getNumber x == n || (getEffect x == e && e /= "none") || c == "first card" = True
                          | otherwise = podeJogar xs (n,c,e)
 
+--Funcao que retorna 1 carta do deck principal que irao pra mao do player
 pegaUma :: Deck -> Carta
 pegaUma [x] = x
 pegaUma (x:xs) = pegaUma xs
 
+-- Funcao que retira 1 carta do deck principal para colocar na mao de algum player
+-- quando o mesmo nn possuir carta valida
 tiraUma :: Deck -> Deck
 tiraUma [x] = []
 tiraUma (x:xs) = [x] ++ tiraUma xs
@@ -94,3 +97,28 @@ venceu d | size d == 0 = True
 -- Funcão para mostrar o deck
 showDeck :: Deck -> Deck
 showDeck deck = deck
+
+-- vefifica se um deck tem carta especial
+temSpecialCard :: Deck -> Bool
+temSpecialCard [] = False
+temSpecialCard (x:xs) | isSpecialCard x = True
+                      | otherwise = temSpecialCard xs
+
+-- retorna as posições das cartas especiais de um deck, se tiver
+specialCards :: Deck -> [Int] -> Carta -> Int -> [Int]
+specialCards deck retorno topo pos = do
+  if (size deck == 0) then do
+    retorno
+  else if (cartaValida (head deck) topo && isSpecialCard (head deck)) then do
+    let card = head deck
+    specialCards (tail deck) (retorno++[pos]) topo (pos+1)
+  else do
+    specialCards (tail deck) retorno topo (pos+1)
+
+firstCardValid :: Deck -> Carta -> Int -> Int
+firstCardValid (x:xs) topo pos | cartaValida x topo == True = pos
+                               | otherwise = firstCardValid xs topo (pos+1)
+
+cardPosition :: Deck -> Int -> Int
+cardPosition (x:xs) pos | isSpecialCard x = pos
+                        | otherwise = cardPosition xs (pos+1)

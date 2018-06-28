@@ -1,16 +1,17 @@
-module Principal where
+ module Principal where
 
 import System.Process
 import DeckFunctions
 import CartaFunctions
 import JogadorFunctions
+import Bot
 import Util
 
 type Vez = Int
 
 pilha = [(5,"AZUL"," "),(-1,"VERMELHA","+2"),(1,"VERMELHA"," "),(2,"VERDE"," "),(7,"AMARELA"," "),(9,"VERDE"," "),(2,"AMARELA"," "),(1,"VERMELHA"," "),(8,"VERDE"," "),(00,"VERDE","BLOCK"),(4,"AZUL"," ")]
 deck1 = [(1,"AZUL"," "),(-1,"AZUL","+2"),(1,"VERMELHA"," "),(2,"VERDE"," "),(1,"AMARELA"," "),(7,"AMARELA","REVERSE")]
-deck2 = [(5,"VERDE"," "),(6,"VERMELHA"," "),(0,"VERMELHA"," "),(7,"VERMELHA"," "),(0,"AZUL"," "),(0,"VERMELHA","REVERSE")]
+deck2 = [(5,"VERDE"," "),(6,"VERMELHA"," "),(0,"VERMELHA"," ")]
 deck3 = [(7,"AMARELA"," "),(3,"AMARELA"," "),(3,"AZUL"," "),(5,"VERMELHA"," "),(1,"VERDE"," "),(10,"VERDE","REVERSE")]
 deck4 = [(9,"AZUL"," "),(4,"AZUL"," "),(1,"VERDE"," "),(8,"AMARELA"," "),(2,"VERMELHA"," ")]
 
