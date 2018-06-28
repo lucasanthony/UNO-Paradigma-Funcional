@@ -13,7 +13,6 @@ pilha = [(5,"AZUL"," "),(-1,"VERMELHA","+2"),(1,"VERMELHA"," "),(2,"VERDE"," "),
 deck1 = [(1,"AZUL"," "),(-1,"AZUL","+2"),(1,"VERMELHA"," "),(2,"VERDE"," "),(1,"AMARELA"," "),(7,"AMARELA","REVERSE")]
 deck2 = [(5,"VERDE"," "),(6,"VERMELHA"," "),(0,"VERMELHA"," ")]
 deck3 = [(7,"AMARELA"," "),(3,"AMARELA"," "),(3,"AZUL"," "),(5,"VERMELHA"," "),(1,"VERDE"," "),(10,"VERDE","REVERSE")]
-deck4 = [(9,"AZUL"," "),(4,"AZUL"," "),(1,"VERDE"," "),(8,"AMARELA"," "),(2,"VERMELHA"," ")]
 
 getString :: String -> IO String
 getString str = do
@@ -209,4 +208,4 @@ gerenciaBot2 topo pilha jogador1 deck1 deck2 deck3 reversed = do
       putStrLn ("uma carta foi adicionada na mão de Dilmãe\n")
       if (reversed == True) then do
         rodarJogo topo (tiraUma pilha) jogador1 deck1 deck2 (deck3 ++ [pegaUma pilha]) 2 reversed
-      else do rodarJogo topo (tiraUma pilha) jogador1 deck2 (deck3 ++ [pegaUma pilha]) deck3 1 reversed
+      else do rodarJogo topo (tiraUma pilha) jogador1 deck1 (deck3 ++ [pegaUma pilha]) deck3 1 reversed
