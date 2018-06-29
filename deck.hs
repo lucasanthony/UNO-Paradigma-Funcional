@@ -116,11 +116,33 @@ specialCards deck retorno topo pos = do
   else do
     specialCards (tail deck) retorno topo (pos+1)
 
+-- primeira carta do deck que pode ser jogada
 firstCardValid :: Deck -> Carta -> Int -> Int
 firstCardValid [] _ pos = pos
 firstCardValid (x:xs) topo pos | cartaValida x topo == True = pos
                                | otherwise = firstCardValid xs topo (pos+1)
 
+-- posição de determinada carta no deck
 cardPosition :: Deck -> Int -> Int
 cardPosition (x:xs) pos | isSpecialCard x = pos
                         | otherwise = cardPosition xs (pos+1)
+
+{- vermelhas = [(0,"VERMELHA"," "),(1,"VERMELHA"," "),(2,"VERMELHA"," "),(3,"VERMELHA"," "),(4,"VERMELHA"," "),
+(5,"VERMELHA"," "),(6,"VERMELHA"," "),(7,"VERMELHA"," "),(8,"VERMELHA"," "),(9,"VERMELHA"," "),
+(00,"VERMELHA","BLOCK"),(01,"VERMELHA","REVERSE"),(02,"VERMELHA","+2")]
+
+azuis = [(0,"AZUL"," "),(1,"AZUL"," "),(2,"AZUL"," "),(3,"AZUL"," "),(4,"AZUL"," "),(5,"AZUL"," "),
+(6,"AZUL"," "),(7,"AZUL"," "),(8,"AZUL"," "),(9,"AZUL"," "),(00,"AZUL","BLOCK"),(01,"AZUL","REVERSE"),
+(02,"AZUL","+2")]
+
+verdes = [(0,"VERDE"," "),(1,"VERDE"," "),(2,"VERDE"," "),(3,"VERDE"," "),(4,"VERDE"," "),(5,"VERDE"," "),
+(6,"VERDE"," "),(7,"VERDE"," "),(8,"VERDE"," "),(9,"VERDE"," "),(00,"VERDE","BLOCK"),(01,"VERDE","REVERSE"),
+(02,"VERDE","+2")]
+
+amarelas = [(0,"AMARELA"," "),(1,"AMARELA"," "),(2,"AMARELA"," "),(3,"AMARELA"," "),(4,"AMARELA"," "),
+(5,"AMARELA"," "),(6,"AMARELA"," "),(7,"AMARELA"," "),(8,"AMARELA"," "),(9,"AMARELA"," "),(00,"AMARELA","BLOCK"),
+(01,"AMARELA","REVERSE"),(02,"AMARELA","+2")]
+
+especiais = [(03,"PRETA","+4"),(03,"PRETA","+4"),(03,"PRETA","+4"),(03,"PRETA","+4"),
+(04,"PRETA","CORINGA"),(04,"PRETA","CORINGA"),(04,"PRETA","CORINGA"),(04,"PRETA","CORINGA"),]
+-}
