@@ -127,6 +127,21 @@ cardPosition :: Deck -> Int -> Int
 cardPosition (x:xs) pos | isSpecialCard x = pos
                         | otherwise = cardPosition xs (pos+1)
 
+insertByIndex :: [a] -> a -> Int -> [a]
+insertByIndex [] _ _ = []
+insertByIndex (x:xs) element i | i == 0 = [element] ++ insertByIndex xs element (i-1)
+                               | otherwise = [x] ++ insertByIndex xs element (i-1)
+
+myShuffle :: [Int] -> [a] -> [a] -> [a]
+myShuffle indices deck retorno = do
+if (length indices == 0) then do
+  retorno
+  else do
+    let newRetorno = insertByIndex retorno (head deck) (head indices)
+    myShuffle (tail indices) (tail deck) newRetorno
+
+
+
 {- vermelhas = [(0,"VERMELHA"," "),(1,"VERMELHA"," "),(2,"VERMELHA"," "),(3,"VERMELHA"," "),(4,"VERMELHA"," "),
 (5,"VERMELHA"," "),(6,"VERMELHA"," "),(7,"VERMELHA"," "),(8,"VERMELHA"," "),(9,"VERMELHA"," "),
 (00,"VERMELHA","BLOCK"),(01,"VERMELHA","REVERSE"),(02,"VERMELHA","+2")]
