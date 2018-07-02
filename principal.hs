@@ -1,5 +1,6 @@
  module Principal where
 
+import Control.Concurrent
 import System.Process
 import DeckFunctions
 import CartaFunctions
@@ -140,7 +141,8 @@ gerenciaPlayer topo pilha jogador1 deck1 deck2 deck3 reversed = do
 
 gerenciaBot1 :: Carta -> Deck -> Nome -> Deck -> Deck -> Deck -> Bool -> IO ()
 gerenciaBot1 topo pilha jogador1 deck1 deck2 deck3 reversed = do
-        putStrLn ("     Vez de Lula\n")
+        putStrLn ("     Lula está jogando...\n")
+        threadDelay 2000000
         if (podeJogar deck2 topo) then do
           if (reversed == True) then do
             let op = escolheJogada deck2 deck1 topo
@@ -176,7 +178,8 @@ gerenciaBot1 topo pilha jogador1 deck1 deck2 deck3 reversed = do
 
 gerenciaBot2 :: Carta -> Deck -> Nome -> Deck -> Deck -> Deck -> Bool -> IO ()
 gerenciaBot2 topo pilha jogador1 deck1 deck2 deck3 reversed = do
-  putStrLn ("     Vez de Dilmãe\n")
+  putStrLn ("     Dilmãe está jogando...\n")
+  threadDelay 2000000
   if (podeJogar deck3 topo) then do
     if (reversed == True) then do
       let op = escolheJogada deck3 deck1 topo
