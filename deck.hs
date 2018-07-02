@@ -140,6 +140,12 @@ if (length indices == 0) then do
     let newRetorno = insertByIndex retorno (head deck) (head indices)
     myShuffle (tail indices) (tail deck) newRetorno
 
+-- shuffle da internet
+shuffle :: [Int] -> [a] -> [a]
+shuffle _ [] = []
+shuffle (i:is) xs = let (firsts, rest) = splitAt (i `mod` length xs) xs
+                    in (last firsts) : shuffle is (init firsts ++ rest)
+
 
 
 {- vermelhas = [(0,"VERMELHA"," "),(1,"VERMELHA"," "),(2,"VERMELHA"," "),(3,"VERMELHA"," "),(4,"VERMELHA"," "),
