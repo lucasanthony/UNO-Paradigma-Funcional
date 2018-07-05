@@ -155,7 +155,7 @@ gerenciaBot1 topo pilha deck1 deck2 deck3 reversed = do
               rodarJogo (getCarta deck2 op) (tiraDuas pilha) (deck1++(pegaDuas pilha)) (pickPlay deck2 op) deck3 1 reversed
             else do rodarJogo (getCarta deck2 op) pilha deck1 (pickPlay deck2 op) deck3 1 reversed
           else do
-            let op = firstCardValid deck2 topo 0
+            let op = firstValidCard deck2 topo 0
             if (getEffect(getCarta deck2 op) == "REVERSE") then do
               rodarJogo (getCarta deck2 op) pilha deck1 (pickPlay deck2 op) deck3 1 True
             else if (getEffect(getCarta deck2 op) == "BLOCK") then do
@@ -192,7 +192,7 @@ gerenciaBot2 topo pilha deck1 deck2 deck3 reversed = do
         rodarJogo (getCarta deck3 op) (tiraDuas pilha) deck1 (deck2++(pegaDuas pilha)) (pickPlay deck3 op) 2 reversed
       else do rodarJogo (getCarta deck3 op) pilha deck1 deck2 (pickPlay deck3 op) 2 reversed
     else do
-      let op = firstCardValid deck3 topo 0
+      let op = firstValidCard deck3 topo 0
       if (getEffect(getCarta deck3 op) == "REVERSE") then do
         rodarJogo (getCarta deck3 op) pilha deck1 deck2 (pickPlay deck3 op) 2 True
       else if (getEffect(getCarta deck3 op) == "BLOCK") then do

@@ -40,3 +40,11 @@ msgBlock vez reversed | vez == 1 && reversed == True = putStrLn ("Dilmãe passa 
 isSpecialCard :: Carta -> Bool
 isSpecialCard (_,_,effect) | effect == " " = False
                            | otherwise = True
+
+isMidCard :: Carta -> Bool
+isMidCard (_,_,effect) | effect == "REVERSE" || effect == "BLOCK" = True
+                       | otherwise = False
+
+isLateCard :: Carta -> Bool
+isLateCard (_,_,effect) | effect == "+2" || effect == "+4" = True
+                        | otherwise = False

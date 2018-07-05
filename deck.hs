@@ -117,10 +117,28 @@ specialCards deck retorno topo pos = do
     specialCards (tail deck) retorno topo (pos+1)
 
 -- primeira carta do deck que pode ser jogada
-firstCardValid :: Deck -> Carta -> Int -> Int
-firstCardValid [] _ pos = pos
-firstCardValid (x:xs) topo pos | cartaValida x topo == True = pos
-                               | otherwise = firstCardValid xs topo (pos+1)
+firstValidCard :: Deck -> Carta -> Int -> Int
+firstValidCard [] _ pos = pos
+firstValidCard (x:xs) topo pos | cartaValida x topo == True = pos
+                               | otherwise = firstValidCard xs topo (pos+1)
+
+-- primeira carta do deck que nao possui efeito
+firstNormalCard :: Deck -> Carta -> Int -> Int
+firstNormalCard [] _ pos = pos
+firstNormalCard (x:xs) topo pos | cartaValida x topo == True && isSpecialCard x == False = pos
+                                | otherwise = firstNormalCard xs topo (pos + 1)
+  
+-- primeira carta com efeito de Block ou Reverse
+firstMidCard :: Deck -> Carta -> Int -> Int
+firstMidCard [] _ pos = pos
+firstMidCard (x:xs) topo pos | cartaValida x topo == True && isMidCard x == True = pos
+                             | otherwise = firstMidCard xs topo (pos + 1)
+                             
+-- primeira carta com efeito de +2 ou +4
+firstLateCard :: Deck -> Carta -> Int -> Int
+firstLateCard [] _ pos = pos
+firstLateCard (x:xs) topo pos | cartaValida x topo == True && isLateCard x == True = pos
+                             | otherwise = firstLateCard xs topo (pos + 1)
 
 -- posição de determinada carta no deck
 cardPosition :: Deck -> Int -> Int
