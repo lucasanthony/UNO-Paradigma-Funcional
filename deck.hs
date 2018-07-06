@@ -43,6 +43,14 @@ tiraQuatro [a] = []
 tiraQuatro [] = []
 tiraQuatro (x:xs) = [x] ++ tiraQuatro xs
 
+tiraSete :: Deck -> Deck
+tiraSete [a, b, c, d, e, f, g] = []
+tiraSete (x:xs) = [x] ++ tiraSete xs
+
+pegaSete :: Deck -> Deck
+pegaSete [a,b,c,d,e,f,g] = [a,b,c,d,e,f,g]
+pegaSete (x:xs) = pegaSete xs
+
 --Funcao que retorna 2 cartas do deck principal que irao pra mao do player
 pegaDuas ::  Deck ->  Deck
 pegaDuas [x,y] = [x,y]
@@ -74,45 +82,45 @@ showCards s topo n = do
   if (cartaValida (head s) topo) then do
     if (getColor (head s) == "VERDE") then do
       if(getEffect(head s) == " ") then do
-        putStrLn ("> " ++ (show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ "    Efeito: " ++ getEffect(head s))
+        putStrLn ("> " ++ (show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ "       Efeito: " ++ getEffect(head s))
       else do
-        putStrLn ("> " ++ (show n) ++ " - " ++ "          Cor: " ++ getColor(head s) ++ "    Efeito: " ++ getEffect(head s))
+        putStrLn ("> " ++ (show n) ++ " - " ++ "          Cor: " ++ getColor(head s) ++ "       Efeito: " ++ getEffect(head s))
     else if (getColor (head s) == "AZUL") then do
       if(getEffect(head s) == " ") then do
-        putStrLn ("> " ++ (show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ "    Efeito: " ++ getEffect(head s))
+        putStrLn ("> " ++ (show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ "        Efeito: " ++ getEffect(head s))
       else do
         putStrLn ("> " ++ (show n) ++ " - " ++ "          Cor: " ++ getColor(head s) ++ "    Efeito: " ++ getEffect(head s))
     else if (getColor (head s) == "AMARELA") then do
       if(getEffect(head s) == " ") then do
-        putStrLn ("> " ++ (show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ "    Efeito: " ++ getEffect(head s))
+        putStrLn ("> " ++ (show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ "     Efeito: " ++ getEffect(head s))
       else do
         putStrLn ("> " ++ (show n) ++ " - " ++ "          Cor: " ++ getColor(head s) ++ "    Efeito: " ++ getEffect(head s))
     else do 
       if(getEffect(head s) == " ") then do
         putStrLn ("> " ++ (show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ "    Efeito: " ++ getEffect(head s))
       else do
-        putStrLn ("> " ++ (show n) ++ " - " ++ "          Cor: " ++ getColor(head s) ++ "    Efeito: " ++ getEffect(head s))
+        putStrLn ("> " ++ (show n) ++ " - " ++ "          Cor: " ++ getColor(head s) ++ "       Efeito: " ++ getEffect(head s))
   else do
     if (getColor (head s) == "VERDE") then do
       if(getEffect(head s) == " ") then do
-        putStrLn ("  " ++ (show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ "       Efeito: " ++ getEffect(head s))
+        putStrLn ("  " ++ (show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ "             Efeito: " ++ getEffect(head s))
       else do
         putStrLn ("  " ++ (show n) ++ " - " ++ "          Cor: " ++ getColor(head s) ++ "    Efeito: " ++ getEffect(head s))
     else if (getColor (head s) == "AZUL") then do
       if(getEffect(head s) == " ") then do
-        putStrLn ("  " ++ (show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ "        Efeito: " ++ getEffect(head s))
+        putStrLn ("  " ++ (show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ "            Efeito: " ++ getEffect(head s))
       else do
         putStrLn ("  " ++ (show n) ++ " - " ++ "          Cor: " ++ getColor(head s) ++ "    Efeito: " ++ getEffect(head s))
     else if (getColor (head s) == "AMARELA") then do
       if(getEffect(head s) == " ") then do
-        putStrLn ("  " ++ (show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ "   Efeito: " ++ getEffect(head s))
+        putStrLn ("  " ++ (show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ "    Efeito: " ++ getEffect(head s))
       else do
         putStrLn ("  " ++ (show n) ++ " - " ++ "          Cor: " ++ getColor(head s) ++ "    Efeito: " ++ getEffect(head s))
     else do 
       if(getEffect(head s) == " ") then do
         putStrLn ("  " ++ (show n) ++ " - " ++ "Numero: " ++ show(getNumber(head s)) ++ " Cor: " ++ getColor(head s) ++ "      Efeito: " ++ getEffect(head s))
       else do
-        putStrLn ("  " ++ (show n) ++ " - " ++ "          Cor: " ++ getColor(head s) ++ "    Efeito: " ++ getEffect(head s))
+        putStrLn ("  " ++ (show n) ++ " - " ++ "          Cor: " ++ getColor(head s) ++ "       Efeito: " ++ getEffect(head s))
   showCards (tail s) topo (n+1)
 
 -- Função que verifica se o player venceu a partida,
@@ -187,20 +195,23 @@ if (length indices == 0) then do
 
 {- vermelhas = [(0,"VERMELHA"," "),(1,"VERMELHA"," "),(2,"VERMELHA"," "),(3,"VERMELHA"," "),(4,"VERMELHA"," "),
 (5,"VERMELHA"," "),(6,"VERMELHA"," "),(7,"VERMELHA"," "),(8,"VERMELHA"," "),(9,"VERMELHA"," "),
-(00,"VERMELHA","BLOCK"),(01,"VERMELHA","REVERSE"),(02,"VERMELHA","+2")]
+(00,"VERMELHA","BLOCK"),(01,"VERMELHA","REVERSE"),(02,"VERMELHA","+2"), (00,"VERMELHA","BLOCK"),(01,"VERMELHA","REVERSE"),(02,"VERMELHA","+2")]
 
 azuis = [(0,"AZUL"," "),(1,"AZUL"," "),(2,"AZUL"," "),(3,"AZUL"," "),(4,"AZUL"," "),(5,"AZUL"," "),
 (6,"AZUL"," "),(7,"AZUL"," "),(8,"AZUL"," "),(9,"AZUL"," "),(00,"AZUL","BLOCK"),(01,"AZUL","REVERSE"),
+(02,"AZUL","+2"), (00,"AZUL","BLOCK"),(01,"AZUL","REVERSE"),
 (02,"AZUL","+2")]
 
 verdes = [(0,"VERDE"," "),(1,"VERDE"," "),(2,"VERDE"," "),(3,"VERDE"," "),(4,"VERDE"," "),(5,"VERDE"," "),
 (6,"VERDE"," "),(7,"VERDE"," "),(8,"VERDE"," "),(9,"VERDE"," "),(00,"VERDE","BLOCK"),(01,"VERDE","REVERSE"),
+(02,"VERDE","+2"), (00,"VERDE","BLOCK"),(01,"VERDE","REVERSE"),
 (02,"VERDE","+2")]
 
 amarelas = [(0,"AMARELA"," "),(1,"AMARELA"," "),(2,"AMARELA"," "),(3,"AMARELA"," "),(4,"AMARELA"," "),
 (5,"AMARELA"," "),(6,"AMARELA"," "),(7,"AMARELA"," "),(8,"AMARELA"," "),(9,"AMARELA"," "),(00,"AMARELA","BLOCK"),
+(01,"AMARELA","REVERSE"),(02,"AMARELA","+2"), (00,"AMARELA","BLOCK"),
 (01,"AMARELA","REVERSE"),(02,"AMARELA","+2")]
 
 especiais = [(03,"PRETA","+4"),(03,"PRETA","+4"),(03,"PRETA","+4"),(03,"PRETA","+4"),
-(04,"PRETA","CORINGA"),(04,"PRETA","CORINGA"),(04,"PRETA","CORINGA"),(04,"PRETA","CORINGA"),]
+(04,"PRETA","newColor"),(04,"PRETA","newColor"),(04,"PRETA","newColor"),(04,"PRETA","newColor"),]
 -}

@@ -12,10 +12,9 @@ import System.IO.Unsafe
 
 type Vez = Int
 
-pilha = unsafePerformIO $ (shuffle [(5,"AZUL"," "),(-1,"VERMELHA","+2"),(1,"VERMELHA"," "),(2,"VERDE"," "),(7,"AMARELA"," "),(9,"VERDE"," "),(2,"AMARELA"," "),(1,"VERMELHA"," "),(8,"VERDE"," "),(00,"VERDE","BLOCK"),(4,"AZUL"," ")])
-deck1 = unsafePerformIO $ (shuffle [(1,"AZUL"," "),(-1,"AZUL","+2"),(1,"VERMELHA"," "),(2,"VERDE"," "),(2,"VERDE", "+2"),(1,"AMARELA"," "),(7,"AMARELA","REVERSE"), (20, "PRETA", "+4"), (30, "PRETA", "newColor")])
-deck2 = unsafePerformIO $ (shuffle [(5,"VERDE"," "),(6,"VERMELHA"," "),(0,"VERMELHA"," "),(30,"PRETA","+4")])
-deck3 = unsafePerformIO $ (shuffle [(7,"AMARELA"," "), (30,"PRETA","+4")])
+allCards = [(30,"PRETA","+4"),(30,"PRETA","+4"),(30,"PRETA","+4"),(30,"PRETA","+4"),(40,"PRETA","newColor"),(40,"PRETA","newColor"),(40,"PRETA","newColor"),(40,"PRETA","newColor"), (0,"AMARELA"," "),(1,"AMARELA"," "),(2,"AMARELA"," "),(3,"AMARELA"," "),(4,"AMARELA"," "),(5,"AMARELA"," "),(6,"AMARELA"," "),(7,"AMARELA"," "),(8,"AMARELA"," "),(9,"AMARELA"," "),(70,"AMARELA","BLOCK"),(50,"AMARELA","REVERSE"),(60,"AMARELA","+2"), (70,"AMARELA","BLOCK"),(50,"AMARELA","REVERSE"),(60,"AMARELA","+2"), (0,"VERDE"," "),(1,"VERDE"," "),(2,"VERDE"," "),(3,"VERDE"," "),(4,"VERDE"," "),(5,"VERDE"," "),(6,"VERDE"," "),(7,"VERDE"," "),(8,"VERDE"," "),(9,"VERDE"," "),(70,"VERDE","BLOCK"),(50,"VERDE","REVERSE"),(60,"VERDE","+2"), (70,"VERDE","BLOCK"),(50,"VERDE","REVERSE"),(60,"VERDE","+2"), (0,"AZUL"," "),(1,"AZUL"," "),(2,"AZUL"," "),(3,"AZUL"," "),(4,"AZUL"," "),(5,"AZUL"," "),(6,"AZUL"," "),(7,"AZUL"," "),(8,"AZUL"," "),(9,"AZUL"," "),(70,"AZUL","BLOCK"),(50,"AZUL","REVERSE"),(60,"AZUL","+2"), (70,"AZUL","BLOCK"),(50,"AZUL","REVERSE"),(60,"AZUL","+2"), (0,"VERMELHA"," "),(1,"VERMELHA"," "),(2,"VERMELHA"," "),(3,"VERMELHA"," "),(4,"VERMELHA"," "),(5,"VERMELHA"," "),(6,"VERMELHA"," "),(7,"VERMELHA"," "),(8,"VERMELHA"," "),(9,"VERMELHA"," "),(70,"VERMELHA","BLOCK"),(50,"VERMELHA","REVERSE"),(60,"VERMELHA","+2"), (70,"VERMELHA","BLOCK"),(50,"VERMELHA","REVERSE"),(60,"VERMELHA","+2")]
+
+
 getString :: String -> IO String
 getString str = do
        putStr str
@@ -35,7 +34,7 @@ menu = do
     executarOpcao op
 
 executarOpcao :: Char -> IO ()
-executarOpcao '1' = prepararJogo
+executarOpcao '1' = prepararJogo allCards
 executarOpcao '0' = do
   putStrLn ("\nAté breve \n")
 executarOpcao '2' = do
@@ -47,17 +46,21 @@ executarOpcao _ = do
         getChar
         menu
 
-prepararJogo :: IO ()
-prepararJogo = do
+prepararJogo :: Deck -> IO ()
+prepararJogo allCards = do
+      let pilha = unsafePerformIO $ (shuffle allCards)
+      let deck1 = pegaSete pilha 
+      let deck2 = pegaSete (tiraSete pilha)
+      let deck3 = pegaSete (tiraSete (tiraSete pilha))
       putStrLn "Pressione qualquer tecla para iniciar"
       getChar
-      novoJogo deck1 deck2 deck3
+      novoJogo pilha deck1 deck2 deck3
 
-novoJogo ::  Deck ->  Deck ->  Deck -> IO ()
-novoJogo deck1 deck2 deck3 = do
+novoJogo ::  Deck -> Deck ->  Deck ->  Deck -> IO ()
+novoJogo pilha deck1 deck2 deck3 = do
           putStrLn ("\nIniciando o jogo: Você vs Lula vs Dilma" ++ "\" ... ")
           putStrLn ("lets do this!!\n")
-          rodarJogo (0,"first card","none") pilha deck1 deck2 deck3 1 False
+          rodarJogo (0,"first card","none") (tiraSete (tiraSete ( tiraSete pilha))) deck1 deck2 deck3 1 False
 
 rodarJogo :: Carta ->  Deck -> Deck -> Deck ->  Deck -> Vez -> Bool -> IO ()
 rodarJogo topo pilha deck1 deck2 deck3 vez reversed = do
