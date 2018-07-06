@@ -22,5 +22,5 @@ cleanScreen :: IO()
 cleanScreen = putStr "\ESC[1J"
 
 checkInput :: String -> Bool
-checkInput input | input >= "0" && input <= "9" = True
+checkInput input | input == "0" || input == "1" || input == "2" || input == "3" || input == "4" || input == "5" || input == "6" || input == "7" || input == "8" || input == "9" || input == "10" || input == "11" || input == "12" || input == "13" || input == "14" || input == "15" || input == "16" = True       
                  | otherwise = False
