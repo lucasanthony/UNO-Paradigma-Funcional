@@ -27,8 +27,10 @@ showCard s = ("A carta : " ++ "Numero: " ++ show(getNumber s) ++ " Cor: " ++ get
 
 -- Verifica se a carta escolhida é válida
 cartaValida :: Carta -> Carta -> Bool
-cartaValida carta topo | getColor topo == getColor carta || getColor topo == "first card" || getNumber topo == getNumber carta || ((getEffect topo == getEffect carta) && (getEffect carta /= " ")) = True
+cartaValida carta topo | getColor topo == getColor carta || getColor topo == "first card" || getEffect carta == "+4" || getEffect carta == "newColor" || getNumber topo == getNumber carta || ((getEffect topo == getEffect carta) && (getEffect carta /= " ")) = True
                        | otherwise = False
+setColor :: String -> Carta -> Carta
+setColor newColor (numero, cor, efeito) = (numero, newColor, efeito)
 
 msgBlock :: Int -> Bool -> IO()
 msgBlock vez reversed | vez == 1 && reversed == True = putStrLn ("Dilmãe passa a vez!!")

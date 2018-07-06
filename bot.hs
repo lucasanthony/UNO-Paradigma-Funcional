@@ -34,6 +34,9 @@ lateGame deckBot topo = do
         (firstLateCard deckBot topo 1) - 1
     else do
         midGame deckBot topo
+
+selecionaCor :: Deck -> String
+selecionaCor deck = "AZUL"
                                                            
     
                                                    

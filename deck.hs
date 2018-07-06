@@ -12,7 +12,7 @@ size (x:xs) = 1 + size xs
 -- VERIFICA SE O JOGADOR TEM ALGUMA CARTA Q DA MATCH COM A DO TOPO
 podeJogar :: Deck -> Carta -> Bool
 podeJogar [] _ = False
-podeJogar (x:xs) (n,c,e) | getColor x == c || getNumber x == n || (getEffect x == e && e /= " ") || c == "first card" = True
+podeJogar (x:xs) (n,c,e) | getColor x == c || getNumber x == n || getEffect x == "+4" || getEffect x == "newColor" || (getEffect x == e && e /= " ") || c == "first card" = True
                          | otherwise = podeJogar xs (n,c,e)
 
 --Funcao que retorna 1 carta do deck principal que irao pra mao do player

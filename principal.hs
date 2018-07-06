@@ -11,9 +11,9 @@ import Util
 type Vez = Int
 
 pilha = [(5,"AZUL"," "),(-1,"VERMELHA","+2"),(1,"VERMELHA"," "),(2,"VERDE"," "),(7,"AMARELA"," "),(9,"VERDE"," "),(2,"AMARELA"," "),(1,"VERMELHA"," "),(8,"VERDE"," "),(00,"VERDE","BLOCK"),(4,"AZUL"," ")]
-deck1 = [(1,"AZUL"," "),(-1,"AZUL","+2"),(1,"VERMELHA"," "),(2,"VERDE"," "),(1,"AMARELA"," "),(7,"AMARELA","REVERSE")]
-deck2 = [(5,"VERDE"," "),(6,"VERMELHA"," "),(0,"VERMELHA"," ")]
-deck3 = [(7,"AMARELA"," "),(3,"AMARELA"," "),(3,"AZUL"," "),(5,"VERMELHA"," "),(1,"VERDE"," "),(10,"VERDE","REVERSE")]
+deck1 = [(1,"AZUL"," "),(-1,"AZUL","+2"),(1,"VERMELHA"," "),(2,"VERDE"," "),(1,"AMARELA"," "),(7,"AMARELA","REVERSE"), (20, "PRETA", "+4"), (30, "PRETA", "newColor")]
+deck2 = [(5,"VERDE"," "),(6,"VERMELHA"," "),(0,"VERMELHA"," "),(30,"PRETA","+4")]
+deck3 = [(7,"AMARELA"," "), (30,"PRETA","+4")]
 
 getString :: String -> IO String
 getString str = do
@@ -96,6 +96,23 @@ gerenciaPlayer topo pilha deck1 deck2 deck3 reversed = do
                 rodarJogo (getCarta deck1 op) pilha (pickPlay deck1 op) deck2 deck3 2 reversed
               else if (getEffect(getCarta deck1 op) == "+2") then do -- carta +2
                 rodarJogo (getCarta deck1 op) (tiraDuas pilha) (pickPlay deck1 op) deck2 (deck3++(pegaDuas pilha)) 3 reversed
+              else if (getEffect(getCarta deck1 op) == "+4") then do -- carta +4
+                putStrLn("Selecione uma cor entre AZUL, VERDE, AMARELA ou VERMELHA")
+                novaCor <- getLine
+                if(novaCor == "AZUL" || novaCor == "VERDE" || novaCor == "AMARELA" || novaCor == "VERMELHA") then do
+                    rodarJogo (setColor novaCor (getCarta deck1 op)) (tiraQuatro pilha) (pickPlay deck1 op) deck2 (deck3++(pegaQuatro pilha)) 3 reversed
+                else do
+                    putStrLn("Cor inválida! Escolha a carta novamente.")
+                    gerenciaPlayer topo pilha deck1 deck2 deck3 reversed
+                    
+              else if (getEffect(getCarta deck1 op) == "newColor") then do -- carta nova Cor
+                putStrLn("Selecione uma cor entre AZUL, VERDE, AMARELA ou VERMELHA")
+                novaCor <- getLine
+                if(novaCor == "AZUL" || novaCor == "VERDE" || novaCor == "AMARELA" || novaCor == "VERMELHA") then do
+                    rodarJogo (setColor novaCor (getCarta deck1 op)) pilha (pickPlay deck1 op) deck2 deck3 3 reversed
+                else do
+                    putStrLn("Cor inválida! Escolha a carta novamente.")
+                    gerenciaPlayer topo pilha deck1 deck2 deck3 reversed
               else do rodarJogo (getCarta deck1 op) pilha (pickPlay deck1 op) deck2 deck3 3 reversed -- carta simples
           else do -- SE JOGO NÃO ESTÁ INVERTIDO
               if (getEffect(getCarta deck1 op) == "REVERSE") then do
@@ -105,6 +122,24 @@ gerenciaPlayer topo pilha deck1 deck2 deck3 reversed = do
                 rodarJogo (getCarta deck1 op) pilha (pickPlay deck1 op) deck2 deck3 3 reversed
               else if (getEffect(getCarta deck1 op) == "+2") then do -- carta +2
                 rodarJogo (getCarta deck1 op) (tiraDuas pilha) (pickPlay deck1 op) (deck2++(pegaDuas pilha)) deck3 2 reversed
+              else if (getEffect(getCarta deck1 op) == "+4") then do -- carta +4
+                putStrLn("Selecione uma cor entre AZUL, VERDE, AMARELA ou VERMELHA")
+                novaCor <- getLine
+                if(novaCor == "AZUL" || novaCor == "VERDE" || novaCor == "AMARELA" || novaCor == "VERMELHA") then do
+                    rodarJogo (setColor novaCor (getCarta deck1 op)) (tiraQuatro pilha) (pickPlay deck1 op) (deck2++(pegaQuatro pilha)) deck3 2 reversed
+                else do
+                    putStrLn("Cor inválida! Escolha a carta novamente.")
+                    gerenciaPlayer topo pilha deck1 deck2 deck3 reversed
+                    
+              else if (getEffect(getCarta deck1 op) == "newColor") then do -- carta nova Cor
+                putStrLn("Selecione uma cor entre AZUL, VERDE, AMARELA ou VERMELHA")
+                novaCor <- getLine
+                if(novaCor == "AZUL" || novaCor == "VERDE" || novaCor == "AMARELA" || novaCor == "VERMELHA") then do
+                    rodarJogo (setColor novaCor (getCarta deck1 op)) pilha (pickPlay deck1 op) deck2 deck3 2 reversed
+                else do
+                    putStrLn("Cor inválida! Escolha a carta novamente.")
+                    gerenciaPlayer topo pilha deck1 deck2 deck3 reversed
+            
               else do rodarJogo (getCarta deck1 op) pilha (pickPlay deck1 op) deck2 deck3 2 reversed -- carta simples
         else do
           putStrLn ("Carta inválida, tente outra carta!!\n")
@@ -157,9 +192,15 @@ gerenciaBot1 topo pilha deck1 deck2 deck3 reversed = do
               rodarJogo (getCarta deck2 op) pilha deck1 (pickPlay deck2 op) deck3 3 reversed
             else if (getEffect(getCarta deck2 op) == "+2") then do
               rodarJogo (getCarta deck2 op) (tiraDuas pilha) (deck1++(pegaDuas pilha)) (pickPlay deck2 op) deck3 1 reversed
+            else if (getEffect(getCarta deck2 op) == "+4") then do -- carta +4
+              let newColor = selecionaCor deck2
+              rodarJogo (setColor newColor (getCarta deck2 op)) (tiraQuatro pilha) (deck1++(pegaQuatro pilha)) (pickPlay deck2 op) deck3 1 reversed
+            else if (getEffect(getCarta deck2 op) == "newColor") then do -- carta nova Cor
+              let newColor = selecionaCor deck2
+              rodarJogo (setColor newColor (getCarta deck2 op)) pilha deck1 (pickPlay deck2 op) deck3 1 reversed
             else do rodarJogo (getCarta deck2 op) pilha deck1 (pickPlay deck2 op) deck3 1 reversed
           else do
-            let op = firstValidCard deck2 topo 0
+            let op = escolheJogada deck2 deck3 topo
             if (getEffect(getCarta deck2 op) == "REVERSE") then do
               rodarJogo (getCarta deck2 op) pilha deck1 (pickPlay deck2 op) deck3 1 True
             else if (getEffect(getCarta deck2 op) == "BLOCK") then do
@@ -167,6 +208,13 @@ gerenciaBot1 topo pilha deck1 deck2 deck3 reversed = do
               rodarJogo (getCarta deck2 op) pilha deck1 (pickPlay deck2 op) deck3 1 reversed
             else if (getEffect(getCarta deck2 op) == "+2") then do
               rodarJogo (getCarta deck2 op) (tiraDuas pilha) deck1 (pickPlay deck2 op) (deck3++(pegaDuas pilha)) 3 reversed
+            else if (getEffect(getCarta deck2 op) == "+4") then do -- carta +4
+                let newColor = selecionaCor deck2
+                rodarJogo (setColor newColor (getCarta deck2 op)) (tiraQuatro pilha) deck1 (pickPlay deck2 op) (deck3++(pegaQuatro pilha)) 3 reversed
+                
+            else if (getEffect(getCarta deck2 op) == "newColor") then do -- carta nova Cor
+                let newColor = selecionaCor deck2
+                rodarJogo (setColor newColor (getCarta deck2 op)) pilha deck1 (pickPlay deck2 op) deck3 3 reversed
             else do rodarJogo (getCarta deck2 op) pilha deck1 (pickPlay deck2 op) deck3 3 reversed
         else do
           if (cartaValida (pegaUma pilha) topo) then do
@@ -186,7 +234,7 @@ gerenciaBot2 topo pilha deck1 deck2 deck3 reversed = do
   threadDelay 1500000
   if (podeJogar deck3 topo) then do
     if (reversed == True) then do
-      let op = escolheJogada deck3 deck1 topo
+      let op = escolheJogada deck3 deck2 topo
       if (getEffect(getCarta deck3 op) == "REVERSE") then do
         rodarJogo (getCarta deck3 op) pilha deck1 deck2 (pickPlay deck3 op) 1 False
       else if (getEffect(getCarta deck3 op) == "BLOCK") then do
@@ -194,9 +242,15 @@ gerenciaBot2 topo pilha deck1 deck2 deck3 reversed = do
         rodarJogo (getCarta deck3 op) pilha deck1 deck2 (pickPlay deck3 op) 1 reversed
       else if (getEffect(getCarta deck3 op) == "+2") then do
         rodarJogo (getCarta deck3 op) (tiraDuas pilha) deck1 (deck2++(pegaDuas pilha)) (pickPlay deck3 op) 2 reversed
+      else if (getEffect(getCarta deck3 op) == "+4") then do -- carta +4
+        let newColor = selecionaCor deck3
+        rodarJogo (setColor newColor (getCarta deck3 op)) (tiraQuatro pilha) deck1 (deck2++(pegaQuatro pilha)) (pickPlay deck3 op) 2 reversed
+      else if (getEffect(getCarta deck3 op) == "newColor") then do -- carta nova Cor
+        let newColor = selecionaCor deck3
+        rodarJogo (setColor newColor (getCarta deck3 op)) pilha deck1 deck2 (pickPlay deck3 op) 1 reversed
       else do rodarJogo (getCarta deck3 op) pilha deck1 deck2 (pickPlay deck3 op) 2 reversed
     else do
-      let op = firstValidCard deck3 topo 0
+      let op = escolheJogada deck3 deck1 topo
       if (getEffect(getCarta deck3 op) == "REVERSE") then do
         rodarJogo (getCarta deck3 op) pilha deck1 deck2 (pickPlay deck3 op) 2 True
       else if (getEffect(getCarta deck3 op) == "BLOCK") then do
@@ -204,6 +258,12 @@ gerenciaBot2 topo pilha deck1 deck2 deck3 reversed = do
         rodarJogo (getCarta deck3 op) pilha deck1 deck2 (pickPlay deck3 op) 2 reversed
       else if (getEffect(getCarta deck3 op) == "+2") then do
         rodarJogo (getCarta deck3 op) (tiraDuas pilha) (deck1++(pegaDuas pilha)) deck2 (pickPlay deck3 op) 1 reversed
+      else if (getEffect(getCarta deck3 op) == "+4") then do -- carta +4
+        let newColor = selecionaCor deck3
+        rodarJogo (setColor newColor (getCarta deck3 op)) (tiraQuatro pilha) (deck1++(pegaQuatro pilha)) deck2 (pickPlay deck3 op) 1 reversed
+      else if (getEffect(getCarta deck3 op) == "newColor") then do -- carta nova Cor
+        let newColor = selecionaCor deck3
+        rodarJogo (setColor newColor (getCarta deck3 op)) pilha deck1 deck2 (pickPlay deck3 op) 1 reversed
       else do rodarJogo (getCarta deck3 op) pilha deck1 deck2 (pickPlay deck3 op) 1 reversed
   else do
     if (cartaValida (pegaUma pilha) topo) then do
