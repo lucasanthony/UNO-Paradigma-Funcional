@@ -7,14 +7,15 @@ import CartaFunctions
 import JogadorFunctions
 import Bot
 import Util
+import MethodShuffle
+import System.IO.Unsafe
 
 type Vez = Int
 
-pilha = [(5,"AZUL"," "),(-1,"VERMELHA","+2"),(1,"VERMELHA"," "),(2,"VERDE"," "),(7,"AMARELA"," "),(9,"VERDE"," "),(2,"AMARELA"," "),(1,"VERMELHA"," "),(8,"VERDE"," "),(00,"VERDE","BLOCK"),(4,"AZUL"," ")]
-deck1 = [(1,"AZUL"," "),(-1,"AZUL","+2"),(1,"VERMELHA"," "),(2,"VERDE"," "),(2,"VERDE", "+2"),(1,"AMARELA"," "),(7,"AMARELA","REVERSE"), (20, "PRETA", "+4"), (30, "PRETA", "newColor")]
-deck2 = [(5,"VERDE"," "),(6,"VERMELHA"," "),(0,"VERMELHA"," "),(30,"PRETA","+4")]
-deck3 = [(7,"AMARELA"," "), (30,"PRETA","+4")]
-
+pilha = unsafePerformIO $ (shuffle [(5,"AZUL"," "),(-1,"VERMELHA","+2"),(1,"VERMELHA"," "),(2,"VERDE"," "),(7,"AMARELA"," "),(9,"VERDE"," "),(2,"AMARELA"," "),(1,"VERMELHA"," "),(8,"VERDE"," "),(00,"VERDE","BLOCK"),(4,"AZUL"," ")])
+deck1 = unsafePerformIO $ (shuffle [(1,"AZUL"," "),(-1,"AZUL","+2"),(1,"VERMELHA"," "),(2,"VERDE"," "),(2,"VERDE", "+2"),(1,"AMARELA"," "),(7,"AMARELA","REVERSE"), (20, "PRETA", "+4"), (30, "PRETA", "newColor")])
+deck2 = unsafePerformIO $ (shuffle [(5,"VERDE"," "),(6,"VERMELHA"," "),(0,"VERMELHA"," "),(30,"PRETA","+4")])
+deck3 = unsafePerformIO $ (shuffle [(7,"AMARELA"," "), (30,"PRETA","+4")])
 getString :: String -> IO String
 getString str = do
        putStr str
@@ -52,13 +53,13 @@ prepararJogo = do
       getChar
       novoJogo deck1 deck2 deck3
 
-novoJogo :: Deck -> Deck -> Deck -> IO ()
+novoJogo ::  Deck ->  Deck ->  Deck -> IO ()
 novoJogo deck1 deck2 deck3 = do
           putStrLn ("\nIniciando o jogo: Você vs Lula vs Dilma" ++ "\" ... ")
           putStrLn ("lets do this!!\n")
           rodarJogo (0,"first card","none") pilha deck1 deck2 deck3 1 False
 
-rodarJogo :: Carta -> Deck -> Deck -> Deck -> Deck -> Vez -> Bool -> IO ()
+rodarJogo :: Carta ->  Deck -> Deck -> Deck ->  Deck -> Vez -> Bool -> IO ()
 rodarJogo topo pilha deck1 deck2 deck3 vez reversed = do
  putStr ("--------------------------------------------------------------------\n")
  if (venceu deck1) then do
@@ -77,7 +78,7 @@ rodarJogo topo pilha deck1 deck2 deck3 vez reversed = do
    showTopo topo
    gerenciaBot2 topo pilha deck1 deck2 deck3 reversed
 
-gerenciaPlayer :: Carta -> Deck -> Deck -> Deck -> Deck -> Bool -> IO ()
+gerenciaPlayer :: Carta -> Deck -> Deck ->  Deck ->  Deck -> Bool -> IO ()
 gerenciaPlayer topo pilha deck1 deck2 deck3 reversed = do
   if (podeJogar deck1 topo) then do -- SE TEM CARTA QUE DA MATCH
       putStrLn ("  Sua vez - " ++ (next reversed))
@@ -178,7 +179,7 @@ gerenciaPlayer topo pilha deck1 deck2 deck3 reversed = do
         rodarJogo topo (tiraUma pilha) (deck1 ++ [pegaUma pilha]) deck2 deck3 3 reversed
       else do rodarJogo topo (tiraUma pilha) (deck1 ++ [pegaUma pilha]) deck2 deck3 2 reversed
 
-gerenciaBot1 :: Carta -> Deck -> Deck -> Deck -> Deck -> Bool -> IO ()
+gerenciaBot1 :: Carta ->  Deck ->  Deck ->  Deck ->  Deck -> Bool -> IO ()
 gerenciaBot1 topo pilha deck1 deck2 deck3 reversed = do
         putStrLn ("     Lula está jogando...\n")
         threadDelay 1500000
@@ -228,7 +229,7 @@ gerenciaBot1 topo pilha deck1 deck2 deck3 reversed = do
               rodarJogo topo (tiraUma pilha) deck1 (deck2 ++ [pegaUma pilha]) deck3 1 reversed
             else do rodarJogo topo (tiraUma pilha) deck1 (deck2 ++ [pegaUma pilha]) deck3 3 reversed
 
-gerenciaBot2 :: Carta -> Deck -> Deck -> Deck -> Deck -> Bool -> IO ()
+gerenciaBot2 :: Carta -> Deck ->  Deck ->  Deck ->  Deck -> Bool -> IO ()
 gerenciaBot2 topo pilha deck1 deck2 deck3 reversed = do
   putStrLn ("     Dilmãe está jogando...\n")
   threadDelay 1500000

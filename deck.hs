@@ -5,37 +5,37 @@ import CartaFunctions
 type Deck = [Carta]
 
 -- Retorna o tamanho do deck
-size :: Deck -> Int
+size ::  Deck -> Int
 size [] = 0
 size (x:xs) = 1 + size xs
 
 -- VERIFICA SE O JOGADOR TEM ALGUMA CARTA Q DA MATCH COM A DO TOPO
-podeJogar :: Deck -> Carta -> Bool
+podeJogar ::  Deck -> Carta -> Bool
 podeJogar [] _ = False
 podeJogar (x:xs) (n,c,e) | getColor x == c || getNumber x == n || getEffect x == "+4" || getEffect x == "newColor" || (getEffect x == e && e /= " ") || c == "first card" = True
                          | otherwise = podeJogar xs (n,c,e)
 
 --Funcao que retorna 1 carta do deck principal que irao pra mao do player
-pegaUma :: Deck -> Carta
+pegaUma ::  Deck -> Carta
 pegaUma [x] = x
 pegaUma (x:xs) = pegaUma xs
 
 -- Funcao que retira 1 carta do deck principal para colocar na mao de algum player
 -- quando o mesmo nn possuir carta valida
-tiraUma :: Deck -> Deck
+tiraUma ::  Deck ->  Deck
 tiraUma [x] = []
 tiraUma (x:xs) = [x] ++ tiraUma xs
 
 -- Funcao que retira 2 cartas do deck principal para colocar na mao de algum player
 -- quando uma carta +2 for usada
-tiraDuas :: Deck -> Deck
+tiraDuas ::  Deck ->  Deck
 tiraDuas [x,y] = []
 tiraDuas [x] = []
 tiraDuas (x:xs) = [x] ++ tiraDuas xs
 
 -- Funcao que retira 4 cartas do deck principal para colocar na mao de algum player
 -- quando uma carta +4 for usada
-tiraQuatro :: Deck -> Deck
+tiraQuatro ::  Deck ->  Deck
 tiraQuatro [a,b,c,d] = []
 tiraQuatro [a,b,c] = []
 tiraQuatro [a,b] = []
@@ -44,31 +44,31 @@ tiraQuatro [] = []
 tiraQuatro (x:xs) = [x] ++ tiraQuatro xs
 
 --Funcao que retorna 2 cartas do deck principal que irao pra mao do player
-pegaDuas :: Deck -> Deck
+pegaDuas ::  Deck ->  Deck
 pegaDuas [x,y] = [x,y]
 pegaDuas (x:xs) = pegaDuas xs
 
 --Funcao que retorna 4 cartas do deck principal que irao pra mao do player
-pegaQuatro :: Deck -> Deck
+pegaQuatro ::  Deck ->  Deck
 pegaQuatro [a,b,c,d] = [a,b,c,d]
 pegaQuatro (x:xs) = pegaQuatro xs
 
 -- Funcao para retirar uma carta especifica da mao do player
-pickPlay :: Deck -> Int -> Deck
+pickPlay ::  Deck -> Int ->  Deck
 pickPlay [] _ = []
 pickPlay (_:xs) 0 = xs
 pickPlay (x:xs) n | n == 0 = pickPlay xs (n+1)
                  | otherwise = [x] ++ pickPlay xs (n-1)
 
 -- Retorna uma carta específica do deck passado como parâmetro
-getCarta :: Deck -> Int -> Carta
+getCarta ::  Deck -> Int -> Carta
 getCarta [] x = (0,"  ","  ")
 getCarta ((n,cor,efeito):xs) x | x == 0 = (n,cor,efeito)
                                | otherwise = getCarta xs (x-1)
 
 -- Mostra as cartas do jogador, as cartas que podem ser jogadas
 -- são indicadas com " >"
-showCards :: Deck -> Carta -> Int -> IO()
+showCards ::  Deck -> Carta -> Int -> IO()
 showCards [] _ _ = return()
 showCards s topo n = do
   if (cartaValida (head s) topo) then do
@@ -117,22 +117,22 @@ showCards s topo n = do
 
 -- Função que verifica se o player venceu a partida,
 -- verificação feita pelo deck do mesmo
-venceu :: Deck -> Bool
+venceu ::  Deck -> Bool
 venceu d | size d == 0 = True
          | otherwise = False
 
 -- Funcão para mostrar o deck
-showDeck :: Deck -> Deck
+showDeck ::  Deck -> Deck
 showDeck deck = deck
 
 -- vefifica se um deck tem carta especial
-temSpecialCard :: Deck -> Bool
+temSpecialCard ::  Deck -> Bool
 temSpecialCard [] = False
 temSpecialCard (x:xs) | isSpecialCard x = True
                       | otherwise = temSpecialCard xs
 
 -- retorna as posições das cartas especiais de um deck, se tiver
-specialCards :: Deck -> [Int] -> Carta -> Int -> [Int]
+specialCards ::  Deck -> [Int] -> Carta -> Int -> [Int]
 specialCards deck retorno topo pos = do
   if (size deck == 0) then do
     retorno
@@ -149,25 +149,25 @@ firstValidCard (x:xs) topo pos | cartaValida x topo == True = pos
                                | otherwise = firstValidCard xs topo (pos+1)
 
 -- primeira carta do deck que nao possui efeito
-firstNormalCard :: Deck -> Carta -> Int -> Int
+firstNormalCard ::  Deck -> Carta -> Int -> Int
 firstNormalCard [] _ pos = pos
 firstNormalCard (x:xs) topo pos | cartaValida x topo == True && isSpecialCard x == False = pos
                                 | otherwise = firstNormalCard xs topo (pos + 1)
   
 -- primeira carta com efeito de Block ou Reverse
-firstMidCard :: Deck -> Carta -> Int -> Int
+firstMidCard ::  Deck -> Carta -> Int -> Int
 firstMidCard [] _ pos = pos
 firstMidCard (x:xs) topo pos | cartaValida x topo == True && isMidCard x == True = pos
                              | otherwise = firstMidCard xs topo (pos + 1)
                              
 -- primeira carta com efeito de +2 ou +4
-firstLateCard :: Deck -> Carta -> Int -> Int
+firstLateCard ::  Deck -> Carta -> Int -> Int
 firstLateCard [] _ pos = pos
 firstLateCard (x:xs) topo pos | cartaValida x topo == True && isLateCard x == True = pos
                              | otherwise = firstLateCard xs topo (pos + 1)
 
 -- posição de determinada carta no deck
-cardPosition :: Deck -> Int -> Int
+cardPosition ::  Deck -> Int -> Int
 cardPosition (x:xs) pos | isSpecialCard x = pos
                         | otherwise = cardPosition xs (pos+1)
 

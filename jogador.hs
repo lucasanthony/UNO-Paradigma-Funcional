@@ -20,5 +20,5 @@ next reversed | reversed == True = "Próximo a jogar: Dilmãe\n"
                       | otherwise = "Próximo a jogar: Lula\n"
 
 -- Mostra ao jogador quantas cartas cada bot tem na mão
-status :: Deck -> Deck -> IO()
+status :: Deck ->  Deck -> IO()
 status deck2 deck3 = putStrLn ("Status: Lula -> " ++ show (size deck2) ++ " cartas; Dilmãe -> " ++ show (size deck3) ++ " cartas\n")
