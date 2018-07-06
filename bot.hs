@@ -35,6 +35,10 @@ lateGame deckBot topo = do
     else do
         midGame deckBot topo
 
+
+{- Seleciona a melhor cor para jogar em cartas coringas: nova cor ou +4, a melhor cor para jogar é definida pela 
+quantitativa da cor mais presente na mão -}
+
 selecionaCor :: Deck -> String
 selecionaCor deck
     | blueCount deck >= maximum[redCount deck, yellowCount deck, greenCount deck] = "AZUL"
