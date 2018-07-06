@@ -11,7 +11,7 @@ import Util
 type Vez = Int
 
 pilha = [(5,"AZUL"," "),(-1,"VERMELHA","+2"),(1,"VERMELHA"," "),(2,"VERDE"," "),(7,"AMARELA"," "),(9,"VERDE"," "),(2,"AMARELA"," "),(1,"VERMELHA"," "),(8,"VERDE"," "),(00,"VERDE","BLOCK"),(4,"AZUL"," ")]
-deck1 = [(1,"AZUL"," "),(-1,"AZUL","+2"),(1,"VERMELHA"," "),(2,"VERDE"," "),(1,"AMARELA"," "),(7,"AMARELA","REVERSE"), (20, "PRETA", "+4"), (30, "PRETA", "newColor")]
+deck1 = [(1,"AZUL"," "),(-1,"AZUL","+2"),(1,"VERMELHA"," "),(2,"VERDE"," "),(2,"VERDE", "+2"),(1,"AMARELA"," "),(7,"AMARELA","REVERSE"), (20, "PRETA", "+4"), (30, "PRETA", "newColor")]
 deck2 = [(5,"VERDE"," "),(6,"VERMELHA"," "),(0,"VERMELHA"," "),(30,"PRETA","+4")]
 deck3 = [(7,"AMARELA"," "), (30,"PRETA","+4")]
 
