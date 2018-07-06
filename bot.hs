@@ -44,8 +44,7 @@ selecionaCor deck
     | blueCount deck >= maximum[redCount deck, yellowCount deck, greenCount deck] = "AZUL"
     | redCount deck >= maximum[blueCount deck, yellowCount deck, greenCount deck] = "VERMELHA"
     | yellowCount deck >= maximum[redCount deck, blueCount deck, greenCount deck] = "AMARELA"
-    | greenCount deck >= maximum[redCount deck, blueCount deck, yellowCount deck] = "VERDE"
-    | otherwise = "PRETA" 
+    | otherwise = "VERDE"
 
 blueCount ::  Deck -> Int
 blueCount [] = 0
@@ -61,7 +60,7 @@ yellowCount (x:xs) = if getColor x == "AMARELA" then 1+yellowCount xs else yello
 
 greenCount ::  Deck -> Int
 greenCount [] = 0
-greenCount (x:xs) = if getColor x == "Verde" then 1+greenCount xs else greenCount xs
+greenCount (x:xs) = if getColor x == "VERDE" then 1+greenCount xs else greenCount xs
 
 
 

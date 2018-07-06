@@ -53,11 +53,18 @@ pegaSete (x:xs) = pegaSete xs
 
 --Funcao que retorna 2 cartas do deck principal que irao pra mao do player
 pegaDuas ::  Deck ->  Deck
+pegaDuas [] = []
+pegaDuas [x] = []
 pegaDuas [x,y] = [x,y]
 pegaDuas (x:xs) = pegaDuas xs
 
+
 --Funcao que retorna 4 cartas do deck principal que irao pra mao do player
 pegaQuatro ::  Deck ->  Deck
+pegaQuatro [] = []
+pegaQuatro [a] = []
+pegaQuatro [a,b] = []
+pegaQuatro [a,b,c] = []
 pegaQuatro [a,b,c,d] = [a,b,c,d]
 pegaQuatro (x:xs) = pegaQuatro xs
 
@@ -183,6 +190,8 @@ insertByIndex :: [a] -> a -> Int -> [a]
 insertByIndex [] _ _ = []
 insertByIndex (x:xs) element i | i == 0 = [element] ++ insertByIndex xs element (i-1)
                                | otherwise = [x] ++ insertByIndex xs element (i-1)
+emptyDeck :: Deck -> Bool
+emptyDeck deck = (size deck) == 0
 
 myShuffle :: [Int] -> [a] -> [a] -> [a]
 myShuffle indices deck retorno = do
