@@ -36,7 +36,31 @@ lateGame deckBot topo = do
         midGame deckBot topo
 
 selecionaCor :: Deck -> String
-selecionaCor deck = "AZUL"
+selecionaCor deck
+    | blueCount deck >= maximum[redCount deck, yellowCount deck, greenCount deck] = "AZUL"
+    | redCount deck >= maximum[blueCount deck, yellowCount deck, greenCount deck] = "VERMELHA"
+    | yellowCount deck >= maximum[redCount deck, blueCount deck, greenCount deck] = "AMARELA"
+    | greenCount deck >= maximum[redCount deck, blueCount deck, yellowCount deck] = "VERDE"
+    | otherwise = "PRETA" 
+
+blueCount :: Deck -> Int
+blueCount [] = 0
+blueCount (x:xs) = if getColor x == "AZUL" then 1+blueCount xs else blueCount xs
+
+redCount :: Deck -> Int
+redCount [] = 0
+redCount (x:xs) = if getColor x == "VERMELHA" then 1+redCount xs else redCount xs
+
+yellowCount :: Deck -> Int
+yellowCount [] = 0
+yellowCount (x:xs) = if getColor x == "AMARELA" then 1+yellowCount xs else yellowCount xs
+
+greenCount :: Deck -> Int
+greenCount [] = 0
+greenCount (x:xs) = if getColor x == "Verde" then 1+greenCount xs else greenCount xs
+
+
+
                                                            
     
                                                    
