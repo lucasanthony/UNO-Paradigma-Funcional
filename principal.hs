@@ -58,7 +58,7 @@ prepararJogo allCards = do
 
 novoJogo ::  Deck -> Deck ->  Deck ->  Deck -> IO ()
 novoJogo pilha deck1 deck2 deck3 = do
-          putStrLn ("\nIniciando o jogo: Você vs Lula vs Dilma" ++ "\" ... ")
+          putStrLn ("\nIniciando o jogo: Você vs Bozonaro vs Guedes" ++ "\" ... ")
           putStrLn ("lets do this!!\n")
           rodarJogo (0,"first card","none") (tiraSete (tiraSete ( tiraSete pilha))) deck1 deck2 deck3 1 False
 
@@ -72,9 +72,9 @@ rodarJogo topo pilha deck1 deck2 deck3 vez reversed = do
         if (venceu deck1) then do
             putStrLn ("Você venceu, parabéns!!")
         else if (venceu deck2) then do
-            putStrLn ("Lula agora está livre, você perdeu!!")
+            putStrLn ("Bozonaro destruiu o Brasil, você perdeu!!")
         else if (venceu deck3) then do
-            putStrLn ("Dilmãe voltou à presidência, você perdeu!!")
+            putStrLn ("Guedes conseguiu a reforma da previdência, você perdeu!!")
         else if (vez == 1) then do
             showTopo topo
             gerenciaPlayer topo pilha deck1 deck2 deck3 reversed
@@ -233,8 +233,8 @@ gerenciaPlayer topo pilha deck1 deck2 deck3 reversed = do
 
 gerenciaBot1 :: Carta ->  Deck ->  Deck ->  Deck ->  Deck -> Bool -> IO ()
 gerenciaBot1 topo pilha deck1 deck2 deck3 reversed = do
-        putStrLn ("     Lula está jogando...\n")
-        threadDelay 1500000
+        putStrLn ("     Bozonaro está jogando...\n")
+        threadDelay 2000000
         if (podeJogar deck2 topo) then do
           if (reversed == True) then do
             let op = escolheJogada deck2 deck1 topo
@@ -321,15 +321,15 @@ gerenciaBot1 topo pilha deck1 deck2 deck3 reversed = do
                 else do rodarJogo (pegaUma pilha) (tiraUma pilha) deck1 deck2 deck3 3 reversed
         
           else do
-            putStrLn ("uma carta foi adicionada na mão de Lula\n")
+            putStrLn ("uma carta foi adicionada na mão de Bozonaro\n")
             if (reversed == True) then do
               rodarJogo topo (tiraUma pilha) deck1 (deck2 ++ [pegaUma pilha]) deck3 1 reversed
             else do rodarJogo topo (tiraUma pilha) deck1 (deck2 ++ [pegaUma pilha]) deck3 3 reversed
 
 gerenciaBot2 :: Carta -> Deck ->  Deck ->  Deck ->  Deck -> Bool -> IO ()
 gerenciaBot2 topo pilha deck1 deck2 deck3 reversed = do
-  putStrLn ("     Dilmãe está jogando...\n")
-  threadDelay 1500000
+  putStrLn ("     Guedes está jogando...\n")
+  threadDelay 2000000
   if (podeJogar deck3 topo) then do
     if (reversed == True) then do
       let op = escolheJogada deck3 deck2 topo
@@ -413,12 +413,12 @@ gerenciaBot2 topo pilha deck1 deck2 deck3 reversed = do
                   
                 else do rodarJogo (pegaUma pilha) (tiraUma pilha) deck1 deck2 deck3 1 reversed
     else do
-      putStrLn ("uma carta foi adicionada na mão de Dilmãe\n")
+      putStrLn ("uma carta foi adicionada na mão de Guedes\n")
       if (reversed == True) then do
         rodarJogo topo (tiraUma pilha) deck1 deck2 (deck3 ++ [pegaUma pilha]) 2 reversed
       else do rodarJogo topo (tiraUma pilha) deck1 (deck3 ++ [pegaUma pilha]) deck3 1 reversed
 
 vencedor :: Deck -> Deck -> Deck -> String
 vencedor jogador bot1 bot2 | (size jogador) <= (size bot1) && (size jogador) <= (size bot2) = "Você venceu!!"
-                           | (size bot1) < (size bot2) = "Lula venceu!!"
+                           | (size bot1) < (size bot2) = "Bozonaro venceu!!"
                            | otherwise = "Dilmãe venceu!!"
